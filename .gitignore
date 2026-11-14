@@ -19,8 +19,9 @@ masteredits.txt
 # The operator's own notes: local only, never staged, never read
 /notes.md
 
-# The private context supplement, never pushed (cywaithmds/coordlocal.md)
+# The private context supplement and accompanying dir, neither ever pushed (cywaithmds/coordlocal.md)
 cywaithmds/priv_ctxt_sup.md
+priv_additional_files/
 
 # cywaithmds disposables (porth's method.md section 2), by prefix family
 cywaithmds/slice*
