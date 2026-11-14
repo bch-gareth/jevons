@@ -1,0 +1,8 @@
+# cywaithmds/opener_files.txt
+#
+# This repo's LOCAL opener files: twndish -o stages each one for the
+# role on its line and lists it in that role's opener (porth's poS100).
+# One '<role> <path>' a line, the role lc, saer or fc; '#' lines and
+# blank lines ignored. Read from this repo's working tree. jevons has
+# no notes file beyond its durable ones, so no role has a line
+# (porth's export_kit.md section 3).

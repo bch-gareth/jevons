@@ -1,0 +1,32 @@
+# .gitignore
+# From the laptop's global ignore file (~/.gitignore_global, read at
+# porth's poS201, 2026-11-11), so a clone elsewhere ignores the same
+.venv/
+venv/
+__pycache__/
+*.pyc
+node_modules/
+.env
+target/
+masteredits.txt
+
+# WSL / Windows interop artefacts
+*:Zone.Identifier
+*.swp
+*~
+.DS_Store
+
+# The operator's own notes: local only, never staged, never read
+/notes.md
+
+# The private context supplement, never pushed (cywaithmds/coordlocal.md)
+cywaithmds/priv_ctxt_sup.md
+
+# cywaithmds disposables (porth's method.md section 2), by prefix family
+cywaithmds/slice*
+cywaithmds/dossier*
+cywaithmds/ad_saer*
+cywaithmds/take-home*
+cywaithmds/harvest_*
+cywaithmds/sort_*
+cywaithmds/survey_*
