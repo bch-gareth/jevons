@@ -130,8 +130,9 @@ this repo does not have, THIS FILE says what stands in for it.
   2026-11-14). cywaithmds/priv_ctxt_sup.md holds the private half of jevons'
   context, what cannot be public; priv_additional_files/, at the root, holds the
   private material it refers to - the pre-jevons conversation archive and its
-  extracts, the formula notes, the booklet's master, the display research files and
-  the archive mining scripts. Both are git-ignored and never pushed. They are the
+  extracts, the formula notes, the booklet's master and its context file, the
+  display research files and the archive mining scripts. Both are git-ignored and
+  never pushed. They are the
   EXCEPTION to coordinator.md's GIT-IGNORED MEANS LLM-IGNORED: twndish skips an
   ignored path, naming it, so a party reads one only when the operator has staged it
   by hand at twndish's prompt, and only then. No other ignored file is read. A rule
@@ -187,8 +188,9 @@ cash_unbound/booklet.md     the booklet "Cash Unbound", public: the operator's m
                             (path header; its own terms, not MIT)
 priv_additional_files/      private material (git-ignored, never pushed; read only when
                             the operator stages it by hand): the conversation archive
-                            and extracts, formula notes, the booklet's master, the
-                            display research files, the archive mining scripts
+                            and extracts, formula notes, the booklet's master and
+                            its context file, the display research files, the
+                            archive mining scripts
 cywaithmds/context.md       live durable state, Parked and History as sections
 cywaithmds/coordlocal.md    THIS file, coordinator.md's per-repo part (the fc's from the
                             dossier; the lc's in a documentation round)

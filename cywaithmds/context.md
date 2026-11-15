@@ -57,7 +57,8 @@ Parked holds decisions not yet taken, and reaches a saer through its brief; Hist
 is closed narrative, never a fact source.
 
 Founded 2026-11-11 by one empty commit; its founding files written at porth's
-poS201 and placed by the operator (History). Last fold: none yet.
+poS201 and placed by the operator (History). Last fold: jevS010's, by
+jev_fc_1_jevS010 (2026-11-15).
 
 ## What lives where
 
@@ -227,31 +228,58 @@ poS201 and placed by the operator (History). Last fold: none yet.
 
 ## Parked
 
-*Decisions not yet taken, for jevS010 onward. A DUE tag, (DUE: jevSnnn), marks an
-item for a named slice; the parked sweep finds it (coordlocal.md).*
+*Decisions not yet taken. A DUE tag, (DUE: jevSnnn), marks an item for a named
+slice; the parked sweep finds it (coordlocal.md).*
 
-- THE HARVEST (DUE: jevS010): the written companion to "Cash Unbound" and the
-  operator's many LLM conversations before and since, harvested in jevons' first
-  round proper, which he wants landed before 2026-11-14 (po_lc_43_2's C6 b), so that
-  the operator's account above is sourced and cited.
 - THE v1 FORMULA AND ITS DATA: what the formula is, which chain data it takes -
-  relating to hashes and difficulty - and from where; published in full.
+  relating to hashes and difficulty - and from where; published in full. The
+  operator's notes for it (2026-11-15, to jev_lc_1_1_jevS010): the harvest found
+  two sources disagreeing on a constant, and two ways of getting a sum, one of
+  which is to be chosen as the basis of the smoothing for XJU; his provisional
+  smoothing is a 200-week exponential moving average, chosen as a measure
+  verifiable as common in Bitcoin (BTC) commentary rather than one tuned to the
+  chart; how well it suits XJU is yet to be examined, and the pros and cons of so
+  long a span are to be discussed. What can be deduced is deduced first;
+  the open questions go to bca at the right juncture. The detail and those
+  questions are in the private formula notes (What lives where; jevS010). A public
+  description of the formula credits bca by handle and cites only his published
+  pieces, as README.md's references do (jevs_1_1_jevS010, 2026-11-15).
 - THE SERVICE, AND MAYBE AN API: fetching the raw data, applying v1 of the formula
   and publishing the result live.
-- THE DISPLAY: its choice and order, from the side conversation's findings; its
-  programming; its place inside the north-facing window, driven by a PC or a
-  Raspberry Pi.
-- BLAZE 2026: from 2026-11-14, ten days, the operator registered on 2026-11-13
-  (pos_43_3's C5); both deliverables, the photograph of the display in real use
-  from outside the window among them.
-- THE FIRST ROUND'S OPENING (DUE: jevS010): it opens WITHOUT `twndishr jevons
-  --fresh`, or the operator first moves the two sc_display files out of
-  ~/zsa/jevons/cywaithmds/ on the tablet, since --fresh deletes every top-level
-  entry of that folder not starting with a dot (po_lc_43_2's F2).
-- THE TABLET'S SANDBOX FOR A NEW FOLDER (DUE: jevS010): whether the tablet's sandbox
-  and the no-session-memory barrier cover a session opened from the new
-  ~/zsa/jevons/ path is NOT MEASURED; jevons' first lc is the measurement (porth's
-  export_kit.md section 2, THE TABLET SIDE).
+- THE DISPLAY: the permanent window display - no Blaze deadline, the hackathon's
+  being decided (Headline state) - its choice and order, its programming and its
+  place inside the north-facing window. Open from the side conversation's report
+  (jev_sc_1_1_display, 2026-11-13): a fuller comparison of P6 LED film across more
+  sellers, with delivered Isle of Man prices including import VAT and duty, and
+  whether an HDMI controller comes with it; projection film against P6 film, for
+  what the operator wants - large-type prices or monitor-like output; and his
+  original lead, about 1 m2 for about USD 900, never found again. Its findings are
+  a private file (What lives where). The operator's next steps (2026-11-15): put
+  out a request to borrow a large monitor for a few weeks, for the hackathon
+  display; and bottom out what he is buying for the longer-term display, so he can
+  tell the lender it is on order - so the permanent display's choice, though it
+  has no deadline, is wanted early.
+- BLAZE 2026: from 2026-11-14, eight days (jev_lc_1_1_jevS010's F6 a); the
+  operator registered on 2026-11-13 (pos_43_3's C5). Both deliverables (Headline
+  state), among them a photograph or video of the display in real use from
+  outside the window. Owed by the operator (2026-11-15): run through the rest of
+  Blaze 2026's registration conditions and list them; and get the list of
+  deliverables Blaze 2026 requires for an entry to count as complete from the
+  event's side.
+- THE BCH-NOTATION XO TEMPLATE, the further element of the Blaze entry (Headline
+  state, BLAZE 2026): adapt General Protocols' standard P2PKH XO template to show
+  BCH amounts in the operator's notation, so that it is (i) launched alongside XJU
+  on the window display, (ii) a supplementary entry to the hackathon and (iii)
+  added to another entrant's XO grid. Carried out and presented outside this repo;
+  it reaches jevons through the display (jev_lc_1_1_jevS010, 2026-11-15).
+- HEADLINE ALIGNMENT OWED, for the next round that edits Headline state
+  (jev_fc_1_jevS010, 2026-11-15): THE DISPLAY says the permanent display "waits
+  for a later round", where Parked's THE DISPLAY wants its choice early, for the
+  monitor loan; and PROCESS still describes jevons' first lc as yet to open.
+- THE TALK LINK: README.md names the talk "Cash Unbound" unlinked until Paytaca
+  posts its separated recording, which the operator times to his Blaze delivery;
+  the linked line waits, drafted, in the private supplement, THE BOOKLET, and is
+  swapped in on his word (jevs_1_1_jevS010's A7 and B4 a).
 
 ## History
 
@@ -265,3 +293,48 @@ item for a named slice; the parked sweep finds it (coordlocal.md).*
   priv_ctxt_sup.md placed by one tarball, and "jevons" added to porth's
   operated_repos.txt. The founding commit and the acceptance walk's outcome are
   recorded at porth's fold.
+- 2026-11-14 to 2026-11-15, jevS010, jevons' first round: a DOCUMENTATION ROUND in
+  two parts (jev_lc_1_1_jevS010's C3), briefed by jev_lc_1_1_jevS010, built by
+  jevs_1_1_jevS010 and folded by jev_fc_1_jevS010. Part 1 harvested the
+  operator's pre-jevons LLM conversations - exports from his earlier, pre-Claude
+  means of reaching LLMs (jev_lc_1_1_jevS010's A2) - privately: four checked
+  extracts, the v1 formula notes and a provenance record in the private
+  supplement, all git-ignored (jev_lc_1_1_jevS010's B9 c). Part 2 brought
+  context.md level with README.md's newer lines and true - Blaze 2026 eight days,
+  Cash 3.0, the native and reverse oracles, the display decided for the street
+  photo - regenerated README.md from it with references and credits, and
+  published the booklet "Cash Unbound" at cash_unbound/booklet.md
+  (jev_lc_1_1_jevS010's F8; jevs_1_1_jevS010's A9 a): the operator's mdrender
+  export of a private master whose home is now this repo (jevs_1_1_jevS010's B2).
+  That export writes a versioned file beside the master and drops its YAML
+  title-notice, so the public copy is copied into place and its header set after.
+  README.md now follows context.md (jev_lc_1_1_jevS010's E1 c), and the lc revised
+  coordlocal.md, widening the private exception to priv_additional_files/
+  (jev_lc_1_1_jevS010's B5 and C11 a). README.md and the booklet public from the
+  operator's push of 2026-11-15. Parked items closed: THE HARVEST, done; THE FIRST
+  ROUND'S OPENING, met - the folder was not cleared at the lc's opening, both
+  sc_display files present, since moved to priv_additional_files/ by the lc's
+  dadbac tarball; THE TABLET'S SANDBOX FOR A NEW FOLDER, superseded
+  (jev_lc_1_1_jevS010's A3), the lc's partial measurement of 2026-11-14 standing:
+  the bash sandbox active on the new folder and bash unable to write under
+  ~/.claude/projects, the app's own memory deny rule not measured.
+  Measurements. The archive, by the lc's scratchpad scripts (a sum of each
+  message's text; a SHA-1 of each message's stripped text), 2026-11-14: 67 JSON
+  files, 13,796,347 bytes, 1,501 messages, 5,868,884 characters; 976 distinct
+  messages, 4,658,422 distinct characters. The saer's re-measure through the
+  operator's convlib: distinct figures identical; 1,500 messages, convlib dropping
+  one empty inactive-branch message; 5,868,774 characters, a 110-character gap
+  unexplained. Of 197 distinct texts in the harvest set the extracts read 151, the
+  other 46 occurring only in timestamped twins of their base files. The saer's
+  checks: 494 extract quotes against the exports, 0 failing; 97 citations
+  resolving, 0 failing; the public booklet against the master's body, 6,977 words,
+  0 differences; placement sums on the laptop 6/6, 4/4 and 1/1. THE SORT,
+  jev_lc_1_1_jevS010: 40 items taken - 27 the lc's own, 13 of the saer's 22
+  relayed questions - and 1 overruled, the saer's C4, an LLM disclaimer on the
+  public booklet ("I'm not running the llm disclaimer on that one. It's what it
+  is."), costing a one-file follow-up batch; 1 changed by a changed premise, the
+  saer's B2; the operator departed from the lc's lean on 2 of the 9 saer questions
+  put to him and on 2 of the lc's own. The lc's checklist pass on the brief before
+  emission (2026-11-14) caught two faults; both brief falsifiers held at the
+  saer's step zero. Parked and History at this fold's opening (awk over "## "
+  sections, the applied file of jevS010): 40 of 267 lines, 15.0 percent.
