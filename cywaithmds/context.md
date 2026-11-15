@@ -35,11 +35,13 @@ Conversation names carry the repo's prefix - po for porth, jev for jevons - and 
 tag: S for a slice, O for an operator or planning conversation, numbered in tens,
 jevS010 the first here (coordlocal.md, TASKS, SLICES AND TAGS).
 
-THE OPERATOR'S ACCOUNT, NOT YET SOURCED. Every statement below about the history of
-monetary thought, about bca's research or about Kallisti is the operator's own
-account, as he gave it at jevons' founding, and is written as such. Its sources - the
-written companion to his talk and many LLM conversations before and since - are
-harvested in jevons' first round proper, jevS010, and cited there (Parked).
+THE OPERATOR'S ACCOUNT. Every statement below about the history of monetary thought,
+about bca's research or about Kallisti is the operator's own account, as he gave it
+at jevons' founding, and is written as such. Research was done beforehand, in
+addition to private conversations with bca: which material came from which of his
+earlier LLM conversations is recorded in the private supplement, THE HARVEST
+(jevS010; jev_lc_1_1_jevS010's B9 c and A1 b). The written companion to his talk is
+public in this repo (What lives where).
 
 THE COUNT, SO IT MATCHES coordlocal.md's THE COUNT section: FOUR PERSISTENT files -
 this file, method.md and coordinator.md (the process and the coordinators'
@@ -68,6 +70,20 @@ poS201 and placed by the operator (History). Last fold: none yet.
     LICENSE                    The MIT licence, "Copyright (c) 2026
                                bch-gareth" (po_lc_43_2's F6 a, J3 a).
                                No path header.
+    cash_unbound/booklet.md    THE BOOKLET, PUBLIC COPY: "Cash
+                               Unbound", the written companion to the
+                               operator's talk, as plain markdown: the
+                               operator's mdrender output of the
+                               master (priv_additional_files/
+                               cashunboundbooklet.md), regenerated
+                               from it and overwritten, never edited
+                               by hand; its path header added by
+                               addheaders after each render.
+                               Published by jevS010
+                               (jev_lc_1_1_jevS010's G6 a and F8;
+                               jevs_1_1_jevS010's B2); under the
+                               booklet's own terms, not the MIT
+                               licence (jevs_1_1_jevS010's B7 b).
     notes.md                   The operator's own notes: git-ignored,
                                LOCAL ONLY, never staged and never read
                                by a party (po_lc_43_2's K3 a). Not
@@ -75,8 +91,11 @@ poS201 and placed by the operator (History). Last fold: none yet.
     .gitignore                 What git ignores: the patterns the
                                laptop's global ignore file carried,
                                WSL and Windows litter, notes.md, the
-                               private supplement and the disposables
-                               by prefix family (porth's poS201).
+                               private supplement,
+                               priv_additional_files/ (a line the
+                               operator added on 2026-11-14) and the
+                               disposables by prefix family (porth's
+                               poS201).
     .porthignore               Hides coordlocal.md from sugno, so a
                                whole-repo bundle never hands a saer a
                                coordinator file.
@@ -107,20 +126,32 @@ poS201 and placed by the operator (History). Last fold: none yet.
                                alone and staged into jevons' bundles
                                from porth's committed copy (porth's
                                method.md section 2).
-    ~/zsa/jevons/cywaithmds/sc_display_findings.md
-                               TABLET-ONLY, outside the repo: the
-                               findings of the display research
-                               conversation, jev_sc_1_1_display. Not
-                               read at the founding (porth's poS201
-                               brief).
+    priv_additional_files/     PRIVATE: git-ignored, never pushed,
+                               read by a party only when the operator
+                               stages it by hand. Holds the
+                               operator's earlier LLM conversations
+                               (llm_jevons_archive/) and their
+                               extracts, the formula notes, the
+                               archive-mining scripts, the display
+                               research files, the booklet's context
+                               file and the booklet's MASTER,
+                               cashunboundbooklet.md, whose home this
+                               repo is since jevS010 (its YAML and
+                               mdrender section markers included;
+                               edited here, delivered by dadbac) -
+                               mapped in the private supplement, THE
+                               HARVEST.
 
 ## Headline state
 
 *Present tense, pruned at every fold. The state at the outset: nothing is built.*
 
 - THE UNIT. The Jevons, the same word in the singular and the plural (as siemens),
-  honouring W. S. Jevons, whom the operator cites for the standard of deferred
-  payment. Ticker XJU - X, Jevons, Unit - in the form ISO 4217 keeps for units no
+  honouring W. S. Jevons, who counted money's role as a standard of deferred
+  payment (1875); the operator reached the same distinction before finding it in
+  Jevons - for Jevons a fourth function of money, for him a subdivision of the unit
+  of account (jev_lc_1_1_jevS010's K2 (ii)). Ticker XJU - X, Jevons, Unit - in the
+  form ISO 4217 keeps for units no
   country issues (XAU, XDR, XUA), chosen for contracts, legal and corporate, over
   the cryptocurrency world (po_lc_43_2's D3 a, D4 a). XJU is NOT an assigned ISO
   code: only the ISO 4217 maintenance agency assigns them, and it is used
@@ -130,9 +161,10 @@ poS201 and placed by the operator (History). Last fold: none yet.
   paradox current in crypto commentary - so a pitch should get in first with the
   deferred-payment lineage. An earlier candidate was his "lifetime unit": a price
   he intends to keep for the lifetime of his offering.
-- THE THESIS, the operator's, from his talk "Cash Unbound" (given at Cash 2.0, the
-  Bitcoin Cash conference in the Philippines, summer 2026; a written companion
-  exists, not yet read). Money has been pulled into being four things at once - a
+- THE THESIS, the operator's, from his talk "Cash Unbound" (given at Cash 3.0, the
+  Bitcoin Cash conference in the Philippines, summer 2026; jevs_1_1_jevS010's A6 a)
+  and its written companion, the booklet (What lives where). Money has been pulled
+  into being four things at once - a
   medium of exchange (MoE), a TRANSITORY unit of account (UoTA, his term for what is
   generally called the unit of account), a store of value (SoV) and a standard of
   deferred payment - largely by its physicality. A digital currency removes that
@@ -145,23 +177,43 @@ poS201 and placed by the operator (History). Last fold: none yet.
 - THE REVERSE ORACLE, his term: the unit's value is DERIVED from data integral to
   the Bitcoin Cash blockchain - relating to its hashes and difficulty - and made
   available to the world outside it, by a transparent formula published in full.
-  The research is largely by "bitcoin cash autist" (bca). Kallisti has already
-  published a value live using a version of bca's process; the operator's differs,
-  because it serves a different purpose.
-- BLAZE 2026, his hackathon entry. Blaze 2026 starts 2026-11-14 and runs ten days;
-  he registered on 2026-11-13 (the operator, pos_43_3's C5). Two deliverables: (i) a
-  web service, and maybe an API, that fetches the raw data, applies version 1 of
-  the formula and publishes the result live; (ii) a transparent stick-on display
-  inside his shop window in Peel, Isle of Man, declaring his copy and print service
-  prices in Jevons - and a photograph of it in real use, taken from outside the
-  window.
-- THE DISPLAY is being researched in a side conversation, jev_sc_1_1_display, whose
-  findings are a tablet-only file (What lives where). The window faces north and
-  gets no direct sun; the display will be driven by a PC or a Raspberry Pi. The
-  project is GEFN - good enough for now, a mode the operator chooses (porth's
-  method.md section 4) - but a display he can repurpose is worth weighting.
-- BUILT SO FAR: nothing. No formula, no service, no display, no code; the repo holds
-  its founding files alone (History).
+  An oracle feeds real-world data into a blockchain; a NATIVE ORACLE, bca's term,
+  feeds data from within the blockchain directly to smart contracts within it; a
+  reverse oracle takes the same chain-native source and feeds it to the outside
+  world, for a broader use than smart contracts alone - the operator's
+  contribution. The two are not in conflict: the difference is the use, not the
+  thing (jev_lc_1_1_jevS010's K2 (i)). The research is largely by "bitcoin cash
+  autist" (bca). Kallisti has already published a value live using a version of
+  bca's process; the operator's differs, because it serves a different purpose.
+- BLAZE 2026, his hackathon entry. Blaze 2026 starts 2026-11-14 and runs eight days
+  (jev_lc_1_1_jevS010's F6 a); he registered on 2026-11-13 (the operator, pos_43_3's
+  C5). Two deliverables: (i) a web service, and maybe an API, that fetches the raw
+  data, applies version 1 of the formula and publishes the result live; (ii) a
+  digital display inside his shop window in Peel, Isle of Man, declaring his copy
+  and print service prices in Jevons - and a photograph or video of it in real use,
+  taken from outside the window. A further element of his entry, not directly
+  related to the XJU, is carried out and presented outside this repo but also
+  featured in the shop display: a new way of presenting BCH amounts, a variant of
+  scientific notation, carried as an XO template - a fork of GP's (General
+  Protocols') standard P2PKH template, its current version - entered in the
+  hackathon and offered to another entrant's "XO grid". The display shows the
+  XJU-denominated prices in BCH, alternating between the standard presentation and
+  his, with the GBP amount too; the point is to use and demonstrate the notation,
+  to give anyone who agrees a template to adopt it, and to show that with XO it
+  needs no wallet fork - any XO-enabled wallet can opt in or out (README.md's NB;
+  jev_lc_1_1_jevS010's K2 (iii)).
+- THE DISPLAY, the operator's decision, reported by the side conversation
+  jev_sc_1_1_display (2026-11-13) and standing from 2026-11-14
+  (jev_lc_1_1_jevS010): for the hackathon street photo no window display is
+  ordered against the deadline; an ordinary large monitor stands on a table in the
+  shop window, facing the street, driven by the PC or a Raspberry Pi - bright
+  enough for the window, which faces north and gets no direct sun. The permanent
+  window display has no deadline and waits for a later round. The side
+  conversation's findings are a private file (What lives where). The project is
+  GEFN - good enough for now, a mode the operator chooses (porth's method.md
+  section 4) - but a display he can repurpose is worth weighting.
+- BUILT SO FAR: nothing. No formula, no service, no display, no code; besides its
+  founding files the repo holds the booklet's public copy (What lives where).
 - THE REPO. ~/projects/jevons on the laptop, branch main, remote
   github.com/bch-gareth/jevons, PUBLIC; founded by one empty commit, 8c649d1
   "cychwyn", 2026-11-11, by bch-gareth. Identity, remote and credential helpers are
