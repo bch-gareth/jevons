@@ -15,6 +15,11 @@ localised item - THE COUNT, the paths list, the two sweep commands, where the sa
 payloads and the standard prompts live - this file says what jevons has. If the
 two disagree, that is a BUG to flag.*
 
+*Revised by jevS010's lc, jev_lc_1_1_jevS010 (2026-11-15), in jevons' first
+documentation round: README.md now follows context.md, the private exception
+widens to priv_additional_files/, and the first round's folder exception is
+retired.*
+
 *A PUBLIC FILE. jevons is a public repository, so this file is written for a
 human reader as well as for the parties (porth's poS201 brief, decision 6). In
 plain words: the OPERATOR owns the repo and runs every command, commit and push;
@@ -104,9 +109,7 @@ this repo does not have, THIS FILE says what stands in for it.
   session, so which party reads what is conduct (coordinator.md, GIT-IGNORED MEANS
   LLM-IGNORED), and no session writes to its memory folder. THE FOLDER IS CLEARED AT
   A ROUND'S OPENING by `twndishr jevons --fresh` on the round's first tar, the
-  operator's y after its preview, dot-entries kept - but NOT AT THE FIRST ROUND,
-  which opens without --fresh or after the operator moves the display research
-  files out (context.md, Parked).
+  operator's y after its preview, dot-entries kept.
 - THE README, A DEVIATION, WITH ITS REASON (porth's poS201 brief, decision 8). In
   every other repo porth operates on, a root readme.md is the operator's own record,
   never read, staged or edited by a party. In jevons README.md is the PUBLIC
@@ -116,14 +119,23 @@ this repo does not have, THIS FILE says what stands in for it.
   party, its content his alone. The consequences: sugno holds a root readme back
   from its list in any case and addheaders skips it ("skip readme", measured at
   porth's poS201), so README.md carries no path header and reaches a party only by
-  its own backticked path. README.md says it will be updated as each deliverable
-  arrives; the slice that lands one updates it.
-- THE PRIVATE SUPPLEMENT, THE ONE EXCEPTION (the operator's ruling at porth's
-  poS201). cywaithmds/priv_ctxt_sup.md holds the private half of jevons' context,
-  what cannot be public; it is git-ignored and never pushed. It is the ONE
-  EXCEPTION to coordinator.md's GIT-IGNORED MEANS LLM-IGNORED: twndish skips it as
-  an ignored path, so a party reads it only when the operator has staged it by hand
-  at twndish's prompt, and only then. No other ignored file is read.
+  its own backticked path. README.md FOLLOWS context.md: what README.md says is
+  stated in context.md first and README.md is regenerated from it, never edited
+  apart, so the two cannot drift (the operator, jev_lc_1_1_jevS010's E1 c,
+  2026-11-14: "it's in context I should have changed it with readme following from
+  that"). README.md says it will be updated as each deliverable arrives; the slice
+  that lands one updates context.md, and README.md follows.
+- THE PRIVATE SUPPLEMENT AND priv_additional_files/, THE EXCEPTION (the operator's
+  ruling at porth's poS201; widened at jevS010, jev_lc_1_1_jevS010's B5 and C11 a,
+  2026-11-14). cywaithmds/priv_ctxt_sup.md holds the private half of jevons'
+  context, what cannot be public; priv_additional_files/, at the root, holds the
+  private material it refers to - the pre-jevons conversation archive and its
+  extracts, the formula notes, the booklet's master, the display research files and
+  the archive mining scripts. Both are git-ignored and never pushed. They are the
+  EXCEPTION to coordinator.md's GIT-IGNORED MEANS LLM-IGNORED: twndish skips an
+  ignored path, naming it, so a party reads one only when the operator has staged it
+  by hand at twndish's prompt, and only then. No other ignored file is read. A rule
+  for public repos generally is proposed inbound to porth (jevS010).
 - THE REPO'S IDENTITY (porth's poS201 brief, decision 2, and its lc, 2026-11-12).
   Commits are bch-gareth's, by the user name and email set in the repo's own
   config; the remote is https://bch-gareth@github.com/bch-gareth/jevons.git. The
@@ -170,6 +182,13 @@ README.md                   the public description (a party's here; no path head
 LICENSE                     the MIT licence (no path header)
 .gitignore, .porthignore    what git ignores; what sugno hides (this file)
 notes.md                    the operator's own notes (git-ignored, local only, never read)
+cash_unbound/booklet.md     the booklet "Cash Unbound", public: the operator's mdrender
+                            export of its private master, overwritten at each render
+                            (path header; its own terms, not MIT)
+priv_additional_files/      private material (git-ignored, never pushed; read only when
+                            the operator stages it by hand): the conversation archive
+                            and extracts, formula notes, the booklet's master, the
+                            display research files, the archive mining scripts
 cywaithmds/context.md       live durable state, Parked and History as sections
 cywaithmds/coordlocal.md    THIS file, coordinator.md's per-repo part (the fc's from the
                             dossier; the lc's in a documentation round)
