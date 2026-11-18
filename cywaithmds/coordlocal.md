@@ -152,8 +152,16 @@ this repo does not have, THIS FILE says what stands in for it.
   saer) and O (an operator or planning conversation, with none) share one sequence,
   three digits, numbered in tens. The first lc is jev_lc_1_1_jevS010; its saer and
   fc are derived as the standard prompts derive them, jevs_1_1_jevS010 and
-  jev_fc_1_jevS010. The display research conversation run before the founding is
-  titled jev_sc_1_1_display; that is its title only, not a naming rule. There is no
+  jev_fc_1_jevS010. A SIDE CONVERSATION (method.md section 1, A SIDE-CONV) is
+  titled jev_sc_<n>_<fork>_<topic>, n the round's conversation number, as a saer's
+  and an fc's names carry it (jev_lc_2_1_jevO020's fV1 a): the display research
+  run before the founding is jev_sc_1_1_display, the XO study of 2026-11-18
+  jev_sc_2_1_xo (jev_lc_2_1_jevO020's dossier). coordinator.md's NAMING states no
+  form for one, so this is jevons' own; a generic form would travel inbound to
+  porth. A ROUND MAY BE RETAGGED FROM S TO O mid-conversation on the operator's
+  word, its lc renamed: jev_lc_2_1_jevS020 became jev_lc_2_1_jevO020, its number
+  kept, when the build moved to a fresh round, jevS030 (jev_lc_2_1_jevO020's
+  F7 a). There is no
   task queue yet: context.md's Parked carries the items for jevS010 onward, a DUE
   tag, (DUE: jevSnnn), marking one for a named slice; the parked sweep finds them.
 

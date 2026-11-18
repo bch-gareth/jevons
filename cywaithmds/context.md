@@ -37,7 +37,8 @@ jevS010 the first here (coordlocal.md, TASKS, SLICES AND TAGS).
 
 THE OPERATOR'S ACCOUNT. Every statement below about the history of monetary thought,
 about bca's research or about Kallisti is the operator's own account, as he gave it
-at jevons' founding, and is written as such. Research was done beforehand, in
+at jevons' founding, and is written as such, except where a dated measurement is
+cited. Research was done beforehand, in
 addition to private conversations with bca: which material came from which of his
 earlier LLM conversations is recorded in the private supplement, THE HARVEST
 (jevS010; jev_lc_1_1_jevS010's B9 c and A1 b). The written companion to his talk is
@@ -57,8 +58,8 @@ Parked holds decisions not yet taken, and reaches a saer through its brief; Hist
 is closed narrative, never a fact source.
 
 Founded 2026-11-11 by one empty commit; its founding files written at porth's
-poS201 and placed by the operator (History). Last fold: jevS010's, by
-jev_fc_1_jevS010 (2026-11-15).
+poS201 and placed by the operator (History). Last fold: jevO020's, by
+jev_fc_2_jevO020 (2026-11-18).
 
 ## What lives where
 
@@ -186,35 +187,70 @@ jev_fc_1_jevS010 (2026-11-15).
   thing (jev_lc_1_1_jevS010's K2 (i)). The research is largely by "bitcoin cash
   autist" (bca). Kallisti has already published a value live using a version of
   bca's process; the operator's differs, because it serves a different purpose.
-- BLAZE 2026, his hackathon entry. Blaze 2026 starts 2026-11-14 and runs eight days
-  (jev_lc_1_1_jevS010's F6 a); he registered on 2026-11-13 (the operator, pos_43_3's
-  C5). Two deliverables: (i) a web service, and maybe an API, that fetches the raw
-  data, applies version 1 of the formula and publishes the result live; (ii) a
-  digital display inside his shop window in Peel, Isle of Man, declaring his copy
-  and print service prices in Jevons - and a photograph or video of it in real use,
-  taken from outside the window. A further element of his entry, not directly
-  related to the XJU, is carried out and presented outside this repo but also
-  featured in the shop display: a new way of presenting BCH amounts, a variant of
-  scientific notation, carried as an XO template - a fork of GP's (General
-  Protocols') standard P2PKH template, its current version - entered in the
-  hackathon and offered to another entrant's "XO grid". The display shows the
-  XJU-denominated prices in BCH, alternating between the standard presentation and
-  his, with the GBP amount too; the point is to use and demonstrate the notation,
-  to give anyone who agrees a template to adopt it, and to show that with XO it
-  needs no wallet fork - any XO-enabled wallet can opt in or out (README.md's NB;
-  jev_lc_1_1_jevS010's K2 (iii)).
+- BLAZE 2026, his hackathon entry, on DoraHacks, in the MEDIA track, not Mainnet
+  (the operator, 2026-11-16: "I'm not actually building anything with CashScript or
+  building an app *on top of* BCH; rather, something that utilises its POW and
+  therefore *counts on* BCH."). Submissions 2026-11-13 13:00 UTC to 2026-11-22
+  14:00 UTC, judging 23 to 27 November, winners 28 November; prizes Media $1,000
+  PUSD, Community Choice $750 and six bounties (the Details and Tracks tabs, pasted
+  by the operator 2026-11-16; DoraHacks pages refuse a fetch, HTTP 405, and the
+  operator's plain-text paste of a page parses well). His registration completed on
+  2026-11-16, not 2026-11-13 as first recorded, and the repo is linked to the entry;
+  the roll call was missed, and the Details tab waives it and the Telegram check-in
+  for known builders, as the organiser confirmed (jev_lc_2_1_jevO020's F1). The
+  submission, "Introducing Jevons", is MIRRORED: its master is to be
+  blaze2026/buidl_description.md, kept identical to the page ("any edits to be done
+  here or done there then immediately copied back", the operator, 2026-11-16;
+  jev_lc_2_1_jevO020's H7 a). Its brief description, as of jev_lc_2_1_jevO020's
+  N5 a (2026-11-18): "The Jevons (XJU): a unit of account for contracts, its value
+  derived live from the Bitcoin Cash blockchain itself - priced for real in a shop
+  window." Its CashTokens address, public, for EMBER2026 Community Choice votes
+  (jev_lc_2_1_jevO020's F10):
+  bitcoincash:zzdf24xwz70xgsf3ldaftcny70pjzkcz65u093wnpu. Two deliverables: (i) a
+  web service, with a JSON file as its API, that fetches the chain data, applies v1
+  of the formula (below) and publishes the result live; (ii) a digital display
+  inside his shop window in Peel, Isle of Man, declaring his copy and print service
+  prices in Jevons - and a photograph or video of it in real use, taken from
+  outside the window. Both are due before the deadline. The BCH-notation XO
+  template once part of the entry is dropped (History).
 - THE DISPLAY, the operator's decision, reported by the side conversation
   jev_sc_1_1_display (2026-11-13) and standing from 2026-11-14
   (jev_lc_1_1_jevS010): for the hackathon street photo no window display is
   ordered against the deadline; an ordinary large monitor stands on a table in the
   shop window, facing the street, driven by the PC or a Raspberry Pi - bright
   enough for the window, which faces north and gets no direct sun. The permanent
-  window display has no deadline and waits for a later round. The side
+  window display has no Blaze deadline, though its choice is wanted early (Parked,
+  THE DISPLAY). Each price shows in XJU, in BCH (standard notation) and in GBP, the
+  GBP figure from a public BCH/GBP price API (jev_lc_2_1_jevO020's N11 a). The side
   conversation's findings are a private file (What lives where). The project is
   GEFN - good enough for now, a mode the operator chooses (porth's method.md
   section 4) - but a display he can repurpose is worth weighting.
-- BUILT SO FAR: nothing. No formula, no service, no display, no code; besides its
-  founding files the repo holds the booklet's public copy (What lives where).
+- THE v1 FORMULA, DECIDED AND NOT YET BUILT (jev_lc_2_1_jevO020, 2026-11-16 to 18,
+  its labels cited bare in this line). Per block, in height order, the block's raw
+  value is its coinbase - subsidy plus fees, the outputs summed (N7 a) - divided by
+  the energy-equivalent of its work, the work taken from the header's difficulty,
+  not from hashes (N6 a), and the energy from a logistic curve of mining efficiency
+  over time, ceiling 700 GH/J, steepness k = 8e-9 (L3 a), inflection 2034-04-20,
+  t0 = 2029104000 (L4 a): a value in BCH per kWh-equivalent. Published: the latest
+  block's raw value and its exponential moving average over 201,600 blocks, 200
+  weeks, smoothed from the per-block values rather than smoothing on smoothing
+  (L5 b, L6 a, N9 a). The constants are those of aggi's native price oracle view on
+  GitLab (views/materializers/native_price_oracle.yaml: 700, 0.000000008,
+  2029104000, the multiplier 4295032833e-18, data from 2014-07-01), read
+  byte-exact by the lc on 2026-11-16; Kallisti serves that view's output
+  (https://cashnode.bch.ninja/api/views/native_price_oracle; for 2026-11-18 bchmwh
+  1.9581, bchusd 208.24, mwhusd 106.35, read by the lc). THE UNIT, PROVISIONAL
+  (L7 a): 1 XJU = 1 kWh-equivalent, its falsifier the operator's later choice of
+  scale - "I have an instinct to have it a different order of magnitude (or half of
+  one) as an easy differentiation between the two." v1 is FROZEN, PUBLIC AND
+  VERSIONED, the operator's decision of 2026-08-07, superseding his July draft's
+  "fixed for all time" (stood by at L1): a later version never alters v1's series.
+  THE ROUTE, decided: chain data from a public Fulcrum/Electrum server (N8 a); a
+  static site on GitHub Pages, recomputed by an hourly GitHub Action, with a JSON
+  file as its API (N10 a). What stays open: Parked, THE v1 FORMULA.
+- BUILT SO FAR: nothing. The formula is decided (above) but not built; no service,
+  no display, no code; besides its founding files the repo holds the booklet's
+  public copy (What lives where).
 - THE REPO. ~/projects/jevons on the laptop, branch main, remote
   github.com/bch-gareth/jevons, PUBLIC; founded by one empty commit, 8c649d1
   "cychwyn", 2026-11-11, by bch-gareth. Identity, remote and credential helpers are
@@ -222,30 +258,41 @@ jev_fc_1_jevS010 (2026-11-15).
   and to leave them alone.
 - PROCESS. Worked under porth's method from the founding: three conversation types -
   lc, saer, fc - and the FOUR persistent files of THE COUNT above, the shared ones
-  kept in porth. jevons is on porth's operated list since porth's poS201, so its
-  first lc opens by `twndish jevons -l -o jev_lc_1_1_jevS010` on the laptop, and the
+  kept in porth. jevons is on porth's operated list since porth's poS201, so every
+  lc opens by twndish jevons -l -o with the lc's name, on the laptop, and the
   shared files reach every bundle from porth's committed copy (coordlocal.md).
+  Rounds so far: jevS010, the first lc's, a documentation round; jevO020, an
+  operations round folded dossier-only (History). The build is jevS030, its brief
+  drafted at jevO020 to cross that fold (Parked, THE SERVICE AND THE DISPLAY PAGE).
 
 ## Parked
 
 *Decisions not yet taken. A DUE tag, (DUE: jevSnnn), marks an item for a named
 slice; the parked sweep finds it (coordlocal.md).*
 
-- THE v1 FORMULA AND ITS DATA: what the formula is, which chain data it takes -
-  relating to hashes and difficulty - and from where; published in full. The
-  operator's notes for it (2026-11-15, to jev_lc_1_1_jevS010): the harvest found
-  two sources disagreeing on a constant, and two ways of getting a sum, one of
-  which is to be chosen as the basis of the smoothing for XJU; his provisional
-  smoothing is a 200-week exponential moving average, chosen as a measure
-  verifiable as common in Bitcoin (BTC) commentary rather than one tuned to the
-  chart; how well it suits XJU is yet to be examined, and the pros and cons of so
-  long a span are to be discussed. What can be deduced is deduced first;
-  the open questions go to bca at the right juncture. The detail and those
-  questions are in the private formula notes (What lives where; jevS010). A public
-  description of the formula credits bca by handle and cites only his published
-  pieces, as README.md's references do (jevs_1_1_jevS010, 2026-11-15).
-- THE SERVICE, AND MAYBE AN API: fetching the raw data, applying v1 of the formula
-  and publishing the result live.
+- THE v1 FORMULA, WHAT STAYS OPEN (the decided parts: Headline state, THE v1
+  FORMULA): the questions queued for bca on two constants, the steepness and the
+  date of the efficiency curve's inflection, against private material
+  (jev_lc_2_1_jevO020's L2; their detail private, priv_additional_files/); work
+  measured from hashes rather than difficulty, deferred to a later version, not
+  rejected (jev_lc_2_1_jevO020's N6 a, the operator: "The purist in me tends toward
+  using the hash; the paradigm being that the hash price is the price and the DAA is
+  the AMM. However, I can see the advantage of using the difficulty and the beauty of
+  versioning is that my decision now doesn't need to be final."); and the unit's
+  scale (jev_lc_2_1_jevO020's L7 a). A public description of the formula credits bca
+  by handle and cites only his published pieces, as README.md's references do
+  (jevs_1_1_jevS010, 2026-11-15).
+- THE SERVICE AND THE DISPLAY PAGE (DUE: jevS030): the live page with its JSON, and
+  the shop-window display page, on the decided route (Headline state); the brief,
+  drafted by jev_lc_2_1_jevO020 to cross this fold, is issued by jevS030's lc
+  against the folded file. jevS030 also creates blaze2026/buidl_description.md (the
+  submission's master, Headline state) and references/, placing bca's article from
+  The Cash Column - the BLISS 2026 conference publication,
+  http://bitcoincashpodcast.com/column2026.pdf - with bca's and the column editor's
+  agreement (the operator, 2026-11-16), the editor named by role, not by name, in
+  public files; and it regenerates README.md from this file: its NB paragraph on XO
+  and the notation gone, the CashTokens address, The Cash Column and the article's
+  repo links, and the live link once it exists.
 - THE DISPLAY: the permanent window display - no Blaze deadline, the hackathon's
   being decided (Headline state) - its choice and order, its programming and its
   place inside the north-facing window. Open from the side conversation's report
@@ -259,23 +306,23 @@ slice; the parked sweep finds it (coordlocal.md).*
   display; and bottom out what he is buying for the longer-term display, so he can
   tell the lender it is on order - so the permanent display's choice, though it
   has no deadline, is wanted early.
-- BLAZE 2026: from 2026-11-14, eight days (jev_lc_1_1_jevS010's F6 a); the
-  operator registered on 2026-11-13 (pos_43_3's C5). Both deliverables (Headline
-  state), among them a photograph or video of the display in real use from
-  outside the window. Owed by the operator (2026-11-15): run through the rest of
-  Blaze 2026's registration conditions and list them; and get the list of
-  deliverables Blaze 2026 requires for an entry to count as complete from the
-  event's side.
-- THE BCH-NOTATION XO TEMPLATE, the further element of the Blaze entry (Headline
-  state, BLAZE 2026): adapt General Protocols' standard P2PKH XO template to show
-  BCH amounts in the operator's notation, so that it is (i) launched alongside XJU
-  on the window display, (ii) a supplementary entry to the hackathon and (iii)
-  added to another entrant's XO grid. Carried out and presented outside this repo;
-  it reaches jevons through the display (jev_lc_1_1_jevS010, 2026-11-15).
-- HEADLINE ALIGNMENT OWED, for the next round that edits Headline state
-  (jev_fc_1_jevS010, 2026-11-15): THE DISPLAY says the permanent display "waits
-  for a later round", where Parked's THE DISPLAY wants its choice early, for the
-  monitor loan; and PROCESS still describes jevons' first lc as yet to open.
+- BLAZE 2026, the operator's remaining list (jev_lc_2_1_jevO020, 2026-11-18): the
+  photograph or video of the display from the street, before the deadline (Headline
+  state); the announcement on the Blaze Telegram group, and maybe later an X post
+  for others to repost and one main BCH Telegram group, "only if those channels
+  aren't being bombarded by entrants doing the same" (jev_lc_2_1_jevO020's E8);
+  detaching the entry's Build With XO bounty registration; a proper logo, replacing
+  the placeholder used on DoraHacks, xju_logo_placeholder.svg, which is on the
+  tablet only; and a write-up for GP of what the XO attempt taught, his and outside
+  this repo.
+- THE PRIVATE SIDE OF jevO020, owed (jev_fc_2_jevO020, 2026-11-18): at the next
+  dadbac, priv_additional_files/ on the laptop gains what sits on the tablet - the
+  XO side conversation's brief, findings and test files (sc_xo_brief.md,
+  sc_xo_findings.md, sc_xo/), the two survey files of the formula's sources and
+  harvest, private material and the screenshots; and the private
+  supplement, not staged at this fold, gains a pointer to the XO findings, where
+  the notation's specification stays, and maps the two survey files as the
+  formula's harvest.
 - THE TALK LINK: README.md names the talk "Cash Unbound" unlinked until Paytaca
   posts its separated recording, which the operator times to his Blaze delivery;
   the linked line waits, drafted, in the private supplement, THE BOOKLET, and is
@@ -338,3 +385,39 @@ slice; the parked sweep finds it (coordlocal.md).*
   emission (2026-11-14) caught two faults; both brief falsifiers held at the
   saer's step zero. Parked and History at this fold's opening (awk over "## "
   sections, the applied file of jevS010): 40 of 267 lines, 15.0 percent.
+- 2026-11-16 to 2026-11-18, jevO020, an OPERATIONS ROUND, no saer, folded
+  dossier-only (labels in this entry are jev_lc_2_1_jevO020's): its lc opened as
+  jev_lc_2_1_jevS020 and was retagged jev_lc_2_1_jevO020 when the build moved to a
+  fresh round, jevS030 (F7 a); folded by jev_fc_2_jevO020. A scoping round first
+  (A4: "because these jev. sessions/s are also the task sub/project-tracking
+  records, we need to have that clear picture as next actions here too before we
+  get going"): the start state on DoraHacks, the deliverables that qualify an entry
+  and the track, Media. Then the v1 formula, its data route and its hosting were
+  decided (Headline state), the constants read off aggi's view and Kallisti's
+  served values, with two helper agents surveying the formula's sources and the
+  harvest. A side conversation, jev_sc_2_1_xo (2026-11-18), examined the XO
+  template; its findings are private, and the XO add-on and the notation were
+  DROPPED from the entry, README.md and the submission (sF11 b, the operator: "This
+  means dropping the XO and notation references entirely from the readme and the
+  submission. I will do a short write-up for GP with my experience and what was
+  learned and why I didn't follow through with it but that's separate."). The
+  remaining decisions were taken in the lc and the build moved to a fresh
+  conversation (M3 b). Parked items closed: THE BCH-NOTATION XO TEMPLATE, void
+  (sF11 b); HEADLINE ALIGNMENT OWED, met at this fold; BLAZE 2026's two owed lists,
+  done - the page read, the deliverables worked out, the track chosen.
+  Measurements. The lc's context at about 24 percent on the evening of 2026-11-16,
+  at J8 (the operator's reading). Two helper agents in parallel, 2026-11-16/17: the
+  harvest survey, 70 findings, 136,386 subagent tokens, 257 s; the source
+  comparison, 146,493 tokens, 752 s; the lc spot-checked the rows decisions rested
+  on (H04, H13, H14, aggi's constants, the private material), all matching. A
+  helper agent's shell had no network; WebFetch summarises a page, so its quotes
+  are not byte-exact, where curl with a declared allowed domain gave exact bytes.
+  livbot pinged the lc about 45 times between the night of 2026-11-16 and the
+  morning of 2026-11-18. THE SORT, counted from the transcript: 37 items taken, none
+  overruled, two made moot by sF11 b (M1, M2); 41 questions asked with a lean, the
+  operator departing from 8 (A4, A5, B4, E4, H9, L5, sF11, M3). Parked and History
+  at this fold's opening (awk over "## " sections): 112 of 340 lines, Parked 55,
+  History 57, 32.9 percent. At the veto review (jev_lc_2_1_jevO020's fV1 a, fV2 a,
+  fV3 a): a side conversation numbered by its round's conversation number; material
+  shared privately named in public files only as private material; the Headline
+  formula line kept; the batch reissued mechanically by the lc.
