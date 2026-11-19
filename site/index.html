@@ -1,0 +1,192 @@
+<!-- site/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Jevons (XJU) - live value, v1</title>
+<meta name="description" content="The Jevons (XJU): a unit of account for contracts, its value derived live from the Bitcoin Cash blockchain itself.">
+<style>
+:root { --bg: #fbfaf7; --fg: #1c1c1a; --dim: #5d5d57; --line: #d9d6cc; --card: #ffffff; --accent: #0a8f6a; --warn-bg: #fff4d6; --warn-fg: #5c4300; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141513; --fg: #ecebe6; --dim: #a3a299; --line: #34352f; --card: #1d1e1b; --accent: #2fd3a3; --warn-bg: #3a2f10; --warn-fg: #ffe29a; }
+}
+* { box-sizing: border-box; }
+html { font-size: 17px; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.55; }
+main { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1.1rem 3rem; }
+h1 { font-size: 2.1rem; line-height: 1.15; margin: 0.6rem 0 0.2rem; }
+h2 { font-size: 1.25rem; margin: 2.4rem 0 0.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+p { margin: 0.6rem 0; }
+a { color: var(--accent); }
+.tag { color: var(--dim); margin: 0; }
+.version { display: inline-block; border: 1px solid var(--accent); color: var(--accent); border-radius: 0.3rem; padding: 0 0.4rem; font-size: 0.8rem; font-weight: 600; vertical-align: 0.35rem; margin-left: 0.4rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 0.6rem; padding: 1.2rem 1.3rem; margin: 1.4rem 0 0.8rem; }
+.label { color: var(--dim); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
+.big { font-size: 2.3rem; font-weight: 700; line-height: 1.2; margin: 0.2rem 0 0.1rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.big .unit { font-size: 1.2rem; font-weight: 600; color: var(--dim); }
+.sub { color: var(--dim); margin: 0; font-variant-numeric: tabular-nums; }
+.second { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.mid { font-size: 1.35rem; font-weight: 600; margin: 0.1rem 0; font-variant-numeric: tabular-nums; }
+dl.meta { display: grid; grid-template-columns: max-content 1fr; gap: 0.15rem 1rem; margin: 0.8rem 0 0; font-size: 0.92rem; }
+dl.meta dt { color: var(--dim); }
+dl.meta dd { margin: 0; font-variant-numeric: tabular-nums; }
+.notice { background: var(--warn-bg); color: var(--warn-fg); border-radius: 0.5rem; padding: 0.7rem 1rem; margin: 1rem 0; }
+.notice[hidden] { display: none; }
+ol.formula { padding-left: 1.3rem; }
+ol.formula li { margin: 0.55rem 0; }
+code, .f { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.92em; }
+.f { display: block; background: var(--card); border: 1px solid var(--line); border-radius: 0.4rem; padding: 0.35rem 0.6rem; margin: 0.25rem 0; overflow-x: auto; white-space: nowrap; }
+ul { padding-left: 1.2rem; }
+li { margin: 0.35rem 0; }
+footer { color: var(--dim); font-size: 0.88rem; margin-top: 2.6rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<main>
+
+<h1>The Jevons <span class="version" id="version">v1</span></h1>
+<p class="tag">Ticker <strong>XJU</strong> - a unit of account for contracts, its value derived live from the Bitcoin Cash blockchain itself.</p>
+
+<div class="notice" id="notice" hidden></div>
+<noscript><div class="notice">This page fills in its figures with JavaScript. The same figures are in <a href="v1.json">v1.json</a>.</div></noscript>
+
+<div class="card">
+  <p class="label">The Jevons' value - 200-week moving average</p>
+  <p class="big"><span class="unit">1 XJU =</span> <span id="ema">...</span> <span class="unit">BCH</span></p>
+  <p class="sub">1 BCH = <span id="ema-inv">...</span> XJU</p>
+  <div class="second">
+    <p class="label">Latest block's raw value</p>
+    <p class="mid">1 XJU = <span id="raw">...</span> BCH</p>
+    <p class="sub">1 BCH = <span id="raw-inv">...</span> XJU</p>
+  </div>
+  <dl class="meta">
+    <dt>Block height</dt><dd id="height">...</dd>
+    <dt>Block time</dt><dd id="block-time">...</dd>
+    <dt>Last update</dt><dd id="updated">...</dd>
+  </dl>
+</div>
+<p class="sub">Recomputed every hour from Bitcoin Cash chain data. The same figures, as JSON: <a href="v1.json">v1.json</a>.</p>
+
+<h2>What this is</h2>
+<p>The Jevons is a proposed unit of account for contracts: a unit any two parties to a contract can choose to denominate it in, when the units otherwise available suit them poorly. It honours the economist W. S. Jevons, who in 1875 counted money's role as a standard of deferred payment.</p>
+<p>Its value is derived from data integral to the Bitcoin Cash (BCH) blockchain - each block's difficulty and its coinbase - by the formula below, published in full so that anyone can check it. An oracle carries outside data onto a chain; this is a <em>reverse oracle</em>: it carries the chain's own data out, to the world beyond it.</p>
+<p>The why, and the thinking behind it, are in <a href="https://github.com/bch-gareth/jevons#readme">the project's README</a> and in the booklet <a href="https://github.com/bch-gareth/jevons/blob/main/cash_unbound/booklet.md">Cash Unbound</a>.</p>
+
+<h2>The v1 formula, in full</h2>
+<p>For each Bitcoin Cash block from height <span data-c="start_height">308672</span> - the first block at or after 1 July 2014, 00:00 UTC - in the order of its height:</p>
+<ol class="formula">
+  <li>The block's work, in expected hashes, from the difficulty <code>D</code> that the header's nBits field stands for:
+    <span class="f">W = D &times; 2^48 / 65535 &nbsp; (the same number as 2^256 / target)</span></li>
+  <li>The block's time, the header's timestamp made strictly increasing; the first block's <code>t</code> is its own timestamp:
+    <span class="f">t = max(timestamp, previous t + 1)</span></li>
+  <li>Mining efficiency at that time, in gigahashes per joule, a logistic curve whose midpoint, <span data-c="eta_t0">2029104000</span>, is 20 April 2034, 00:00 UTC:
+    <span class="f">eta(t) = <span data-c="eta_max_gh_per_j">700</span> / (1 + exp(-<span data-c="eta_k_per_second">8e-9</span> &times; (t - <span data-c="eta_t0">2029104000</span>)))</span></li>
+  <li>The block's energy-equivalent, in kWh:
+    <span class="f">E = W / (eta(t) &times; 10^9) / <span data-c="joules_per_kwh">3600000</span></span></li>
+  <li>The block's coinbase, in BCH: the outputs of its coinbase transaction, summed - the subsidy plus the fees:
+    <span class="f">C = sum of the coinbase transaction's outputs</span></li>
+  <li>The block's raw value, in BCH per kWh-equivalent; and 1 XJU = <span data-c="xju_kwh">1</span> kWh-equivalent:
+    <span class="f">P = C / E &nbsp;&nbsp; raw value in BCH per XJU = P &times; <span data-c="xju_kwh">1</span></span></li>
+  <li>The Jevons' value is the exponential moving average of the raw value over <span data-c="ema_n_blocks">201600</span> blocks - 200 weeks of 10-minute blocks - begun at the first block's <code>P</code>:
+    <span class="f">A = previous A + alpha &times; (P - previous A) &nbsp;&nbsp; alpha = 2 / (<span data-c="ema_n_blocks">201600</span> + 1)</span></li>
+</ol>
+<p>The arithmetic is IEEE 754 double precision throughout; <code>W</code> is one division of two whole numbers, and <code>C</code> stays in whole satoshis until its one division.</p>
+<p><strong>v1 is frozen, public and versioned:</strong> a later version never alters v1's published series.</p>
+
+<h2>Check it yourself</h2>
+<ul>
+  <li><a href="v1.json">v1.json</a> - the figures above and every constant, for programs to read.</li>
+  <li><a href="https://github.com/bch-gareth/jevons/tree/v1-data">The per-block inputs</a> - each block's height, timestamp, nBits and coinbase total, kept in the open and added to every hour.</li>
+  <li><a href="https://github.com/bch-gareth/jevons/blob/main/service/jevons_v1.py">The code</a> - one Python file, standard library only. It fetches the chain data from a public Fulcrum server and checks what it is given: every header must link to the one before it and meet its own proof-of-work target, and every coinbase must hash to its transaction id and declare its block's height.</li>
+</ul>
+
+<h2>References and credits</h2>
+<ul>
+  <li><strong>"Cash Unbound"</strong>, the talk, given at Cash 3.0, the Bitcoin Cash conference, in 2026, and <a href="https://github.com/bch-gareth/jevons/blob/main/cash_unbound/booklet.md">its written companion</a>.</li>
+  <li><strong>W. S. Jevons</strong>, <em>Money and the Mechanism of Exchange</em> (1875), for money as a standard of deferred payment.</li>
+  <li><strong>bitcoin cash autist</strong> (bca), whose research the reverse oracle rests on: the Bitcoin Cash Research thread <a href="https://bitcoincashresearch.org/t/research-block-difficulty-as-a-price-oracle">Research: Block difficulty as a price oracle</a>; the article "The Hidden Economy Inside Every Block", in The Cash Column, the BLISS 2026 conference publication (<a href="https://github.com/bch-gareth/jevons/blob/main/references/bitcoincashautist_article2026_WhiteBG.pdf">the article</a>; <a href="http://bitcoincashpodcast.com/column2026.pdf">the whole publication</a>); and the code, <a href="https://gitlab.com/0353F40E/aggi">aggi</a>.</li>
+  <li><strong>Kallisti</strong>, the first to publish the number live, on the charts at cashnode.bch.ninja.</li>
+  <li><strong>Karol "Licho" Trzeszczkowski</strong>, whose 2021 paper "Proportional block reward as a price stabilization mechanism for peer-to-peer electronic cash system" bca's article acknowledges as the inspiration for his work.</li>
+</ul>
+
+<footer>
+  <p>The Jevons is an entry to the BCH Blaze 2026 hackathon. Source, MIT licence: <a href="https://github.com/bch-gareth/jevons">github.com/bch-gareth/jevons</a>.</p>
+</footer>
+
+</main>
+<script>
+(function () {
+  "use strict";
+  var STALE_HOURS = 3;
+
+  function el(id) { return document.getElementById(id); }
+
+  // a whole number's digits grouped in threes: 1234567 -> 1,234,567
+  function grouped(digits) {
+    var out = "";
+    for (var i = 0; i < digits.length; i++) {
+      if (i > 0 && (digits.length - i) % 3 === 0) { out += ","; }
+      out += digits.charAt(i);
+    }
+    return out;
+  }
+
+  // n significant figures, in plain decimal notation, the whole part grouped in threes
+  function sig(x, n) {
+    if (typeof x !== "number" || !isFinite(x) || x <= 0) { return String(x); }
+    var decimals = Math.min(20, Math.max(0, n - 1 - Math.floor(Math.log(x) / Math.LN10)));
+    var parts = Number(x.toPrecision(n)).toFixed(decimals).split(".");
+    return grouped(parts[0]) + (parts.length > 1 ? "." + parts[1] : "");
+  }
+
+  function whole(x) { return grouped(String(Math.round(x))); }
+
+  function utc(iso) { return iso.replace("T", " ").replace("Z", " UTC"); }
+
+  function notice(text) {
+    var n = el("notice");
+    n.textContent = text;
+    n.hidden = !text;
+  }
+
+  function show(d) {
+    el("version").textContent = d.version;
+    el("ema").textContent = sig(d.ema_bch_per_xju, 4);
+    el("ema-inv").textContent = sig(d.ema_xju_per_bch, 5);
+    el("raw").textContent = sig(d.raw_bch_per_xju, 4);
+    el("raw-inv").textContent = sig(d.raw_xju_per_bch, 5);
+    el("height").textContent = whole(d.height);
+    el("block-time").textContent = utc(d.block_time_utc);
+    el("updated").textContent = utc(d.updated_utc);
+    var spans = document.querySelectorAll("[data-c]");
+    for (var i = 0; i < spans.length; i++) {
+      var v = d.constants[spans[i].getAttribute("data-c")];
+      if (v !== undefined) { spans[i].textContent = String(v); }
+    }
+    var hours = (Date.now() - Date.parse(d.updated_utc)) / 3600000;
+    if (d.status === "catching-up") {
+      notice("The history is still being fetched: these figures stand at block " + whole(d.height) +
+        ", not yet at the chain's latest block" + (d.tip_height_seen ? ", " + whole(d.tip_height_seen) : "") + ".");
+    } else if (d.status !== "ok") {
+      notice("The latest hourly update could not fetch new blocks; these figures stand at the block shown below.");
+    } else if (hours > STALE_HOURS) {
+      notice("These figures were last updated " + Math.floor(hours) + " hours ago; the hourly update may be delayed.");
+    } else {
+      notice("");
+    }
+  }
+
+  function load() {
+    fetch("v1.json?" + Date.now(), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) { throw new Error("HTTP " + r.status); } return r.json(); })
+      .then(show)
+      .catch(function () { notice("The live figures could not be loaded just now. They are published as v1.json, linked below."); });
+  }
+
+  load();
+  setInterval(load, 5 * 60 * 1000);
+}());
+</script>
+</body>
+</html>
