@@ -1,0 +1,8 @@
+# .twndishinclude
+# Git-ignored paths that porth's twndish stages, instead of skipping, when a
+# party asks for one by name (twndish, porth's poS220). One repo-relative path
+# a line, exact; a directory line covers everything under it. Both entries are
+# jevons' private half, never pushed: cywaithmds/coordlocal.md, THE PRIVATE
+# SUPPLEMENT AND priv_additional_files/.
+cywaithmds/priv_ctxt_sup.md
+priv_additional_files/
