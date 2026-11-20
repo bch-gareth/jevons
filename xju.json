@@ -1,0 +1,48 @@
+{
+  "name": "Jevons",
+  "ticker": "XJU",
+  "version": "0.2",
+  "notice": "Version 0.x is a preview and may change. Version 1 - frozen, public and versioned - follows.",
+  "status": "ok",
+  "status_note": "",
+  "updated_utc": "2026-11-20T11:44:33Z",
+  "height": 978163,
+  "block_time_utc": "2026-11-20T11:31:36Z",
+  "xju_usd": 0.9998481125069726,
+  "bch_usd": 199.76,
+  "bch_usd_source": "General Protocols oracle",
+  "bch_usd_time_utc": "2026-11-20T11:43:37Z",
+  "xju_bch": 0.005005246858765381,
+  "bch_xju": 199.79034565473256,
+  "gbp_usd": 1.310515,
+  "gbp_usd_source": "Kraken GBP/USD midpoint",
+  "gbp_usd_time_utc": "2026-11-20T11:44:33Z",
+  "calibration": {
+    "k": 2.528e+16,
+    "xju_usd": 1.0,
+    "utc_day": "2026-11-19",
+    "height": 978094
+  },
+  "constants": {
+    "k": 2.528e+16,
+    "ema_n_blocks": 201600,
+    "ema_alpha": 9.9205857113804e-06,
+    "eta_ceiling": 700.0,
+    "eta_steepness": 8e-09,
+    "eta_midpoint": 2029104000,
+    "eta_midpoint_utc": "2034-04-20T00:00:00Z",
+    "chain_start_height": 478559,
+    "series_start_height": 478568,
+    "price_first_day": "2017-08-02",
+    "price_snapshot_last_day": "2026-11-19"
+  },
+  "tip_height_seen": 978163,
+  "blocks_in_series": 499596,
+  "source": {
+    "chain": "Bitcoin Cash (BCH) mainnet",
+    "server": "bch.imaginary.cash:50002",
+    "bch_usd_history": "Kallisti's daily bchusd (cashnode.bch.ninja), then General Protocols oracle",
+    "inputs": "https://github.com/bch-gareth/jevons/tree/chain-data",
+    "code": "https://github.com/bch-gareth/jevons/blob/main/service/jevons.py"
+  }
+}
