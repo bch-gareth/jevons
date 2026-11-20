@@ -1,50 +1,72 @@
-# service/jevons_v1.py
-"""The Jevons (XJU), version 1: fetch the chain data, compute the value, write the JSON.
+# service/jevons.py
+"""The Jevons (XJU), preview version 0.2: fetch the chain data, compute the value, write the JSON.
 
-v1 is FROZEN, PUBLIC AND VERSIONED: a later version never alters v1's published
-series. Everything that defines v1 is in the CONSTANTS and THE FORMULA below.
+VERSION 0.x IS A PREVIEW AND MAY CHANGE. Version 1 - frozen, public and versioned -
+follows it. Everything that defines 0.2 is in the CONSTANTS and THE FORMULA below.
 
-For each Bitcoin Cash block from START_HEIGHT, in the order of its height:
+For each Bitcoin Cash block from SERIES_START, in the order of its height:
 
-    W    = 2^256 / target        expected hashes; target is the header's nBits
+    W     = 2^256 / target       expected hashes; target is the header's nBits
                                  expanded. This is difficulty x 2^48 / 0xFFFF.
-    t    = the header's timestamp, made strictly increasing:
-           t = max(timestamp, previous t + 1); the start block's t is its timestamp.
-    eta  = ETA_MAX / (1 + exp(-ETA_K x (t - ETA_T0)))      mining efficiency, GH/J
-    E    = W / (eta x 10^9) / JOULES_PER_KWH               energy-equivalent, kWh
-    C    = the coinbase transaction's outputs, summed      subsidy plus fees, BCH
-    P    = C / E                                           BCH per kWh-equivalent
+    t     = the header's timestamp, made strictly increasing:
+            t = max(timestamp, previous t + 1), run from CHAIN_START, whose t is
+            its own timestamp.
+    eta   = ETA_CEILING / (1 + exp(-ETA_STEEPNESS x (t - ETA_MIDPOINT)))
+            the mining-efficiency curve; its constants are bitcoin cash autist's.
+    C     = the coinbase transaction's outputs, summed, in BCH: subsidy plus fees.
+    P     = C x eta / W
+    U     = BCH/USD for the UTC day that t falls on.
+    A     = previous A + EMA_ALPHA x (P x U - previous A); the first block's A is
+            its own P x U. An exponential moving average over EMA_N blocks.
 
-    The raw value of the block is P x XJU_KWH, in BCH per XJU.
-    The published value is the exponential moving average of the raw value over
-    the blocks: A = P at the start block, then A = A + EMA_ALPHA x (P - A).
+    1 XJU in US dollars = K x A
+    1 XJU in BCH        = K x A / (BCH/USD now)
+
+K is one constant, chosen once so that 1 XJU was 1 US dollar at CALIBRATION_HEIGHT.
+The Jevons is not pegged to the dollar: it has floated from that point.
+
+WHY BCH/USD IS IN THE FORMULA. Measured over 2020-11-15 to 2026-11-19 on Kallisti's
+published daily series, the work per BCH of block reward moved only about half as
+far as BCH's dollar price, at every span from a week to a year. An average taken in
+BCH therefore carries BCH's own price swings into the unit. So each block's value is
+turned into dollars first, averaged, and turned back at the current price. BCH/USD
+is a STAND-IN for a chain-native estimate, which replaces it in version 1.
+
+WHERE BCH/USD COMES FROM. To PRICE_SNAPSHOT_LAST: Kallisti's daily bchusd, kept
+beside this file as bchusd_daily.csv. After it: General Protocols' BCH/USD oracle,
+read at every run; a UTC day's price is the last reading taken during that day, and
+a closed day is never revised. When that oracle cannot be read, Kraken's BCH/USD
+midpoint is taken and its source recorded. A day with no reading at all carries the
+day before's price.
 
 Arithmetic: IEEE 754 double precision throughout. W is ONE correctly rounded
 division of two whole numbers; C stays in whole satoshis until its one division.
 
-Chain data comes from a public Fulcrum (Electrum Cash protocol) server. Nothing
-is taken on the server's word that can be checked here: every header must link
-to the one before it and meet its own proof-of-work target, named checkpoint
-hashes must match, every coinbase's bytes must hash to the transaction id the
-server gave, and the height a coinbase declares must be its block's. The
-server's TLS certificate is NOT verified (public servers commonly self-sign).
+Chain data comes from a public Fulcrum (Electrum Cash protocol) server. Nothing is
+taken on the server's word that can be checked here: every header must link to the
+one before it and meet its own proof-of-work target, named checkpoint hashes must
+match, every coinbase's bytes must hash to the transaction id the server gave, and
+the height a coinbase declares must be its block's. The server's TLS certificate is
+NOT verified (public servers commonly self-sign). The price readings come over
+HTTPS with certificates verified; the oracle's own signatures are not checked.
 
 A block that cannot be fetched or does not check is never skipped and never
-zero-filled: the run HOLDS at the block before it, writes what it has, and
-exits 2, so that the next run tries again and the series never has a hole.
+zero-filled: the run HOLDS at the block before it, writes what it has, and exits 2,
+so that the next run tries again and the series never has a hole.
 
 Standard library only. Commands:
 
-    python3 service/jevons_v1.py selfcheck
-    python3 service/jevons_v1.py update --data DIR     fetch new blocks, write DIR/v1.json
-    python3 service/jevons_v1.py show --data DIR       recompute from DIR, print the JSON
-    python3 service/jevons_v1.py show --data DIR --height H     the same, as at height H
+    python3 service/jevons.py selfcheck
+    python3 service/jevons.py update --data DIR     fetch new blocks, write DIR/xju.json
+    python3 service/jevons.py show --data DIR       recompute from DIR, print the JSON
+    python3 service/jevons.py show --data DIR --height H     the same, as at height H
 
-Exit codes: 0 done; 2 held at a gap (what there is was written); 1 failed.
+Exit codes: 0 done; 2 held (what there is was written); 1 failed.
 """
 import argparse
 import array
 import base64
+import calendar
 import hashlib
 import json
 import math
@@ -53,29 +75,36 @@ import socket
 import ssl
 import sys
 import time
+import urllib.request
 from urllib.parse import urlsplit
 
 # ------------------------------------------------------------------ CONSTANTS
 
-VERSION = "v1"
+VERSION = "0.2"
+NOTICE = "Version 0.x is a preview and may change. Version 1 - frozen, public and versioned - follows."
 
-# THE UNIT: 1 XJU = XJU_KWH kWh-equivalent. The Jevons' scale is this one line.
-XJU_KWH = 1.0
+# THE CALIBRATION: K is chosen once so that 1 XJU = 1 US dollar at CALIBRATION_HEIGHT,
+# the last block of CALIBRATION_DAY (UTC), and published to four significant figures.
+K = 2.528e16
+CALIBRATION_HEIGHT = 978094
+CALIBRATION_DAY = "2026-11-19"
 
-ETA_MAX = 700.0            # GH/J: the efficiency curve's ceiling
-ETA_K = 8e-9               # per second: the curve's steepness
-ETA_T0 = 2029104000        # the curve's inflection, 2034-04-20 00:00:00 UTC
-JOULES_PER_KWH = 3.6e6
+ETA_CEILING = 700.0        # the efficiency curve's ceiling
+ETA_STEEPNESS = 8e-9       # per second
+ETA_MIDPOINT = 2029104000  # the curve's midpoint, 2034-04-20 00:00:00 UTC
 SATS_PER_BCH = 100000000
 
-START_HEIGHT = 308672      # the first block at or after 2014-07-01 00:00:00 UTC
 EMA_N = 201600             # blocks: 200 weeks of 10-minute blocks
 EMA_ALPHA = 2.0 / (EMA_N + 1)
 
-# Block hashes the chain fetched must carry: the start block, and the first
-# block on Bitcoin Cash's side of each of its three chain splits.
+CHAIN_START = 478559       # Bitcoin Cash's first block: the stored inputs and t begin here
+SERIES_START = 478568      # the first block whose t falls on PRICE_FIRST_DAY: the average begins here
+PRICE_FIRST_DAY = "2017-08-02"     # the first day of Kallisti's bchusd
+PRICE_SNAPSHOT_LAST = "2026-11-19"  # the last day taken from the snapshot file
+
+# Block hashes the chain fetched must carry: the first block on Bitcoin Cash's side
+# of each of its three chain splits. The first is CHAIN_START.
 CHECKPOINTS = {
-    308672: "00000000000000003cd0095dd3f8ab06711a556d495ed170a69f07651c13bc9d",
     478559: "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec",
     556767: "0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c",
     661648: "0000000000000000029e471c41818d24b8b74c911071c4ef0b4a0509f9b5a8ce",
@@ -84,13 +113,24 @@ CHECKPOINTS = {
 # ------------------------------------------------------- operational settings
 
 SERVERS = ("bch.imaginary.cash:50002", "bch.loping.net:50002")   # primary, fallback
-INPUTS_URL = "https://github.com/bch-gareth/jevons/tree/v1-data"
-REFETCH_DEPTH = 10     # blocks dropped and fetched again each run (covers a reorganisation)
-TAIL_KEEP = 30         # recent block hashes kept in state.json, to link the next run
-CHUNK = 10000          # blocks per stored file
-HEADER_BATCH = 2016    # headers per request (the protocol's maximum)
-PIPELINE = 100         # requests written before their answers are read
-TIMEOUT = 60           # seconds, per socket operation
+INPUTS_URL = "https://github.com/bch-gareth/jevons/tree/chain-data"
+CODE_URL = "https://github.com/bch-gareth/jevons/blob/main/service/jevons.py"
+SNAPSHOT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bchusd_daily.csv")
+GP_URL = ("https://oracles.generalprotocols.com/api/v1/oracleMessages"
+          "?publicKey=02d09db08af1ff4e8453919cc866a4be427d7bfe18f2c05e5444c196fcf6fd2818&count=1")
+GP_SCALING = 100           # the oracle's price is in US cents per BCH
+GP_NAME = "General Protocols oracle"
+KRAKEN_BCHUSD_URL = "https://api.kraken.com/0/public/Ticker?pair=BCHUSD"
+KRAKEN_BCHUSD_NAME = "Kraken BCH/USD midpoint"
+KRAKEN_GBPUSD_URL = "https://api.kraken.com/0/public/Ticker?pair=GBPUSD"
+KRAKEN_GBPUSD_NAME = "Kraken GBP/USD midpoint"
+READING_MAX_AGE = 3600     # seconds: an oracle message older than this is not a reading of now
+REFETCH_DEPTH = 10         # blocks dropped and fetched again each run (covers a reorganisation)
+TAIL_KEEP = 30             # recent block hashes kept in state.json, to link the next run
+CHUNK = 10000              # blocks per stored file
+HEADER_BATCH = 2016        # headers per request (the protocol's maximum)
+PIPELINE = 100             # requests written before their answers are read
+TIMEOUT = 60               # seconds, per socket operation
 TRIES_PER_SERVER = 2
 DEFAULT_BUDGET_MINUTES = 300
 
@@ -112,14 +152,13 @@ def work(bits):
 
 
 def eta(t):
-    """Mining efficiency at time t, in GH/J: a logistic curve."""
-    return ETA_MAX / (1.0 + math.exp(-ETA_K * (t - ETA_T0)))
+    """The mining-efficiency curve at time t."""
+    return ETA_CEILING / (1.0 + math.exp(-ETA_STEEPNESS * (t - ETA_MIDPOINT)))
 
 
-def raw_value(bits, t, sats):
-    """P: a block's raw value in BCH per kWh-equivalent."""
-    energy_kwh = work(bits) / (eta(t) * 1e9) / JOULES_PER_KWH
-    return (sats / SATS_PER_BCH) / energy_kwh
+def block_value(bits, t, sats):
+    """P = C x eta / W for one block, C in BCH."""
+    return (sats / SATS_PER_BCH) * eta(t) / work(bits)
 
 
 def next_t(previous_t, timestamp):
@@ -129,10 +168,14 @@ def next_t(previous_t, timestamp):
     return previous_t + 1
 
 
-def next_ema(previous_ema, p):
+def next_ema(previous_ema, x):
     if previous_ema is None:
-        return p
-    return previous_ema + EMA_ALPHA * (p - previous_ema)
+        return x
+    return previous_ema + EMA_ALPHA * (x - previous_ema)
+
+
+def utc_day(t):
+    return time.strftime("%Y-%m-%d", time.gmtime(t))
 
 
 # ------------------------------------------------------------ the stored inputs
@@ -147,7 +190,7 @@ class DataError(Exception):
 
 
 class Series:
-    """The per-block inputs from START_HEIGHT on; the height is the position."""
+    """The per-block chain inputs from CHAIN_START on; the height is the position."""
 
     def __init__(self):
         self.ts = array.array("q")
@@ -159,7 +202,7 @@ class Series:
 
     @property
     def last_height(self):
-        return START_HEIGHT + len(self.ts) - 1
+        return CHAIN_START + len(self.ts) - 1
 
     def append(self, ts, bits, sats):
         self.ts.append(ts)
@@ -167,13 +210,13 @@ class Series:
         self.sats.append(sats)
 
     def truncate_after(self, height):
-        n = max(0, height - START_HEIGHT + 1)
+        n = max(0, height - CHAIN_START + 1)
         del self.ts[n:]
         del self.bits[n:]
         del self.sats[n:]
 
     def rows_after(self, height):
-        n = max(0, height - START_HEIGHT + 1)
+        n = max(0, height - CHAIN_START + 1)
         return list(zip(self.ts[n:], self.bits[n:], self.sats[n:]))
 
 
@@ -186,7 +229,7 @@ def load_series(data):
     bdir = _blocks_dir(data)
     if not os.path.isdir(bdir):
         return s
-    expect = START_HEIGHT
+    expect = CHAIN_START
     for name in sorted(n for n in os.listdir(bdir) if n.endswith(".csv")):
         with open(os.path.join(bdir, name), "r", encoding="ascii") as f:
             for line in f:
@@ -204,15 +247,15 @@ def save_series(data, s, from_height):
     """Rewrite every stored file holding a height >= from_height; drop files past the end."""
     bdir = _blocks_dir(data)
     os.makedirs(bdir, exist_ok=True)
-    end = START_HEIGHT + len(s)
-    c = max(from_height, START_HEIGHT) // CHUNK * CHUNK
+    end = CHAIN_START + len(s)
+    c = max(from_height, CHAIN_START) // CHUNK * CHUNK
     while c < end:
-        lo, hi = max(c, START_HEIGHT), min(c + CHUNK, end)
+        lo, hi = max(c, CHAIN_START), min(c + CHUNK, end)
         path = os.path.join(bdir, "%07d.csv" % c)
         with open(path + ".tmp", "w", encoding="ascii", newline="\n") as f:
             f.write("height,time,bits,coinbase_sats\n")
             for h in range(lo, hi):
-                i = h - START_HEIGHT
+                i = h - CHAIN_START
                 f.write("%d,%d,%08x,%d\n" % (h, s.ts[i], s.bits[i], s.sats[i]))
         os.replace(path + ".tmp", path)
         c += CHUNK
@@ -238,24 +281,28 @@ def save_state(data, height, tail):
     os.replace(path + ".tmp", path)
 
 
-DATA_README = """# The Jevons (XJU), v1: the per-block inputs
+DATA_README = """# The Jevons (XJU): the chain inputs and the price readings
 
 This branch is written by the hourly GitHub Action of
 https://github.com/bch-gareth/jevons and by nothing else.
 
-- `blocks/` - one line per Bitcoin Cash block from height %d: its height, its
-  header's timestamp and nBits, and its coinbase's outputs summed, in satoshis.
-  A file holds the blocks of one span of %d heights and is named for the span's
-  first height.
-- `v1.json` - the values published at the time of this branch's latest commit.
+- `blocks/` - one line per Bitcoin Cash block from the chain's first, height %d:
+  its height, its header's timestamp and nBits, and its coinbase's outputs summed,
+  in satoshis. A file holds the blocks of one span of %d heights and is named for
+  the span's first height. These are the chain's own figures, the same for every
+  version of the formula.
+- `bchusd_daily.csv` - BCH/USD for each UTC day after %s, as the hourly run read
+  it: the day's last reading, its source and its time. A closed day is never
+  revised. The days before it are in service/bchusd_daily.csv on the main branch.
+- `xju.json` - the values published at the time of this branch's latest commit.
 - `state.json` - the hashes of the latest blocks, which link the next run.
 
 To check the published value from these inputs, with no network:
 
-    python3 service/jevons_v1.py show --data <a checkout of this branch>
+    python3 service/jevons.py show --data <a checkout of this branch>
 
-The formula is in service/jevons_v1.py on the main branch and on the website.
-""" % (START_HEIGHT, CHUNK)
+The formula is in service/jevons.py on the main branch and on the website.
+""" % (CHAIN_START, CHUNK, PRICE_SNAPSHOT_LAST)
 
 
 def ensure_data_readme(data):
@@ -270,68 +317,248 @@ def ensure_data_readme(data):
         f.write(DATA_README)
 
 
+# ---------------------------------------------------------------- BCH/USD by day
+
+
+def load_snapshot(path=None):
+    """Kallisti's daily bchusd, PRICE_FIRST_DAY to PRICE_SNAPSHOT_LAST: {day: price}."""
+    prices = {}
+    with open(path or SNAPSHOT_FILE, "r", encoding="ascii") as f:
+        for line in f:
+            if not line[:1].isdigit():
+                continue  # the path header and the column line
+            day, price = line.strip().split(",")
+            prices[day] = float(price)
+    days = sorted(prices)
+    want = (_day_number(PRICE_SNAPSHOT_LAST) - _day_number(PRICE_FIRST_DAY)) + 1
+    if not days or days[0] != PRICE_FIRST_DAY or days[-1] != PRICE_SNAPSHOT_LAST or len(days) != want:
+        raise DataError("the price snapshot does not run day by day from %s to %s" % (PRICE_FIRST_DAY, PRICE_SNAPSHOT_LAST))
+    if min(prices.values()) <= 0:
+        raise DataError("the price snapshot holds a price that is not positive")
+    return prices
+
+
+def _day_number(day):
+    return calendar.timegm(time.strptime(day, "%Y-%m-%d")) // 86400
+
+
+def _day_string(number):
+    return time.strftime("%Y-%m-%d", time.gmtime(number * 86400))
+
+
+def load_readings(data):
+    """The days after the snapshot: {day: (price, source, read_utc)}."""
+    out = {}
+    try:
+        with open(os.path.join(data, "bchusd_daily.csv"), "r", encoding="ascii") as f:
+            for line in f:
+                if not line[:1].isdigit():
+                    continue
+                day, price, source, read_utc = line.rstrip("\n").split(",")
+                out[day] = (float(price), source, read_utc)
+    except FileNotFoundError:
+        pass
+    return out
+
+
+def save_readings(data, readings):
+    path = os.path.join(data, "bchusd_daily.csv")
+    with open(path + ".tmp", "w", encoding="ascii", newline="\n") as f:
+        f.write("day,bchusd,source,read_utc\n")
+        for day in sorted(readings):
+            price, source, read_utc = readings[day]
+            f.write("%s,%r,%s,%s\n" % (day, price, source, read_utc))
+    os.replace(path + ".tmp", path)
+
+
+def record_reading(readings, snapshot_last_price, reading, now):
+    """Put this run's reading in today's row and give every closed day without one the day before's price."""
+    today = utc_day(now)
+    if reading is not None and today > PRICE_SNAPSHOT_LAST:
+        readings[today] = (reading["price"], reading["source"], _iso(reading["time"]))
+    last = max([today] + list(readings))
+    previous = snapshot_last_price
+    n = _day_number(PRICE_SNAPSHOT_LAST) + 1
+    while _day_string(n) <= last:
+        day = _day_string(n)
+        if day in readings:
+            previous = readings[day][0]
+        elif day < today:
+            readings[day] = (previous, "carried from the day before", _iso(now))
+        n += 1
+    return readings
+
+
+class DayPrices:
+    """BCH/USD for a UTC day: the snapshot, then the readings, then the latest known."""
+
+    def __init__(self, snapshot, readings):
+        self.by_day = dict(snapshot)
+        for day, row in readings.items():
+            if day > PRICE_SNAPSHOT_LAST:
+                self.by_day[day] = row[0]
+        self.last_day = max(self.by_day)
+
+    def for_day(self, day):
+        if day in self.by_day:
+            return self.by_day[day]
+        if day > self.last_day:
+            return self.by_day[self.last_day]   # a block of a day with no reading yet
+        earlier = [d for d in self.by_day if d < day]
+        if not earlier:
+            raise DataError("no BCH/USD for %s" % day)
+        return self.by_day[max(earlier)]
+
+
+def _http_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "jevons/" + VERSION})
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def parse_oracle_message(message_hex):
+    """A General Protocols price message -> (its timestamp, the price in USD per BCH)."""
+    b = bytes.fromhex(message_hex)
+    if len(b) != 16:
+        raise ValueError("oracle message is %d bytes, not 16" % len(b))
+    return int.from_bytes(b[0:4], "little"), int.from_bytes(b[12:16], "little", signed=True) / GP_SCALING
+
+
+def parse_kraken_mid(doc):
+    """A Kraken Ticker answer for one pair -> the midpoint of best bid and best ask."""
+    if doc.get("error"):
+        raise ValueError("Kraken error: %r" % (doc["error"],))
+    (pair,) = doc["result"].values()
+    return (float(pair["a"][0]) + float(pair["b"][0])) / 2.0
+
+
+def read_bchusd(now):
+    """This run's BCH/USD reading: the oracle, then Kraken; None if neither can be read."""
+    try:
+        ts, price = parse_oracle_message(_http_json(GP_URL)["oracleMessages"][0]["message"])
+        if not 1.0 < price < 1e6:
+            raise ValueError("price %r is not believable" % price)
+        if abs(now - ts) > READING_MAX_AGE:
+            raise ValueError("the latest message is %d seconds from now" % (now - ts))
+        return {"price": price, "source": GP_NAME, "time": ts}
+    except Exception as e:  # network, format and sanity failures alike
+        log("!! %s could not be read: %s: %s" % (GP_NAME, type(e).__name__, e))
+    try:
+        price = parse_kraken_mid(_http_json(KRAKEN_BCHUSD_URL))
+        if not 1.0 < price < 1e6:
+            raise ValueError("price %r is not believable" % price)
+        return {"price": price, "source": KRAKEN_BCHUSD_NAME, "time": int(now)}
+    except Exception as e:
+        log("!! %s could not be read: %s: %s" % (KRAKEN_BCHUSD_NAME, type(e).__name__, e))
+    return None
+
+
+def read_gbpusd(now):
+    """GBP/USD for the shop display's fallback; None if it cannot be read (never a hold)."""
+    try:
+        price = parse_kraken_mid(_http_json(KRAKEN_GBPUSD_URL))
+        if not 0.2 < price < 5.0:
+            raise ValueError("rate %r is not believable" % price)
+        return {"price": price, "source": KRAKEN_GBPUSD_NAME, "time": int(now)}
+    except Exception as e:
+        log("!! %s could not be read: %s: %s" % (KRAKEN_GBPUSD_NAME, type(e).__name__, e))
+    return None
+
+
 # ------------------------------------------------------------------ the compute
 
 
-def compute(s):
+def compute(s, prices):
     """Run the formula over the whole series; return the latest block's figures."""
     t = None
     ema = None
-    p = None
+    first = None
+    n = 0
+    first_day = PRICE_FIRST_DAY
+    day = None
+    day_end = -1
+    price = None
     for i in range(len(s)):
         t = next_t(t, s.ts[i])
-        p = raw_value(s.bits[i], t, s.sats[i])
-        ema = next_ema(ema, p)
-    return {"height": s.last_height, "timestamp": s.ts[-1], "t": t, "raw": p, "ema": ema}
+        if t > day_end:     # t only rises, so a new day is the only change there can be
+            day = utc_day(t)
+            day_end = (t // 86400) * 86400 + 86399
+            price = prices.for_day(day) if day >= first_day else None
+        if price is None:
+            continue    # before the first priced day: t runs, the average has not begun
+        if first is None:
+            first = CHAIN_START + i
+        ema = next_ema(ema, block_value(s.bits[i], t, s.sats[i]) * price)
+        n += 1
+    if first is None:
+        return None
+    if first != SERIES_START:
+        raise DataError("the first priced block is %d, not SERIES_START %d" % (first, SERIES_START))
+    return {"height": s.last_height, "timestamp": s.ts[-1], "t": t, "ema": ema, "blocks": n}
 
 
 def _iso(ts):
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(ts))
 
 
-def build_json(s, status, note, tip_seen, server):
-    r = compute(s)
-    raw = r["raw"] * XJU_KWH
-    ema = r["ema"] * XJU_KWH
-    return {
+def build_json(s, prices, status, note, tip_seen, server, bchusd, gbpusd, now):
+    r = compute(s, prices)
+    if r is None:
+        return None
+    xju_usd = K * r["ema"]
+    doc = {
         "name": "Jevons",
         "ticker": "XJU",
         "version": VERSION,
+        "notice": NOTICE,
         "status": status,
         "status_note": note,
-        "updated_utc": _iso(time.time()),
+        "updated_utc": _iso(now),
         "height": r["height"],
         "block_time_utc": _iso(r["timestamp"]),
-        "block_timestamp": r["timestamp"],
-        "block_t": r["t"],
-        "ema_bch_per_xju": ema,
-        "raw_bch_per_xju": raw,
-        "ema_xju_per_bch": 1.0 / ema,
-        "raw_xju_per_bch": 1.0 / raw,
-        "tip_height_seen": tip_seen,
-        "blocks_in_series": len(s),
+        "xju_usd": xju_usd,
+        "bch_usd": bchusd["price"],
+        "bch_usd_source": bchusd["source"],
+        "bch_usd_time_utc": _iso(bchusd["time"]),
+        "xju_bch": xju_usd / bchusd["price"],
+        "bch_xju": bchusd["price"] / xju_usd,
+        "gbp_usd": gbpusd["price"] if gbpusd else None,
+        "gbp_usd_source": gbpusd["source"] if gbpusd else None,
+        "gbp_usd_time_utc": _iso(gbpusd["time"]) if gbpusd else None,
+        "calibration": {
+            "k": K,
+            "xju_usd": 1.0,
+            "utc_day": CALIBRATION_DAY,
+            "height": CALIBRATION_HEIGHT,
+        },
         "constants": {
-            "xju_kwh": XJU_KWH,
-            "eta_max_gh_per_j": ETA_MAX,
-            "eta_k_per_second": ETA_K,
-            "eta_t0": ETA_T0,
-            "eta_t0_utc": _iso(ETA_T0),
-            "joules_per_kwh": JOULES_PER_KWH,
-            "start_height": START_HEIGHT,
+            "k": K,
             "ema_n_blocks": EMA_N,
             "ema_alpha": EMA_ALPHA,
+            "eta_ceiling": ETA_CEILING,
+            "eta_steepness": ETA_STEEPNESS,
+            "eta_midpoint": ETA_MIDPOINT,
+            "eta_midpoint_utc": _iso(ETA_MIDPOINT),
+            "chain_start_height": CHAIN_START,
+            "series_start_height": SERIES_START,
+            "price_first_day": PRICE_FIRST_DAY,
+            "price_snapshot_last_day": PRICE_SNAPSHOT_LAST,
         },
+        "tip_height_seen": tip_seen,
+        "blocks_in_series": r["blocks"],
         "source": {
             "chain": "Bitcoin Cash (BCH) mainnet",
             "server": server,
+            "bch_usd_history": "Kallisti's daily bchusd (cashnode.bch.ninja), then " + GP_NAME,
             "inputs": INPUTS_URL,
-            "code": "https://github.com/bch-gareth/jevons/blob/main/service/jevons_v1.py",
+            "code": CODE_URL,
         },
     }
+    return doc
 
 
 def write_json(data, doc):
-    path = os.path.join(data, "v1.json")
+    path = os.path.join(data, "xju.json")
     with open(path + ".tmp", "w", encoding="ascii", newline="\n") as f:
         json.dump(doc, f, indent=2)
         f.write("\n")
@@ -443,7 +670,7 @@ class Client:
         self.sock.settimeout(TIMEOUT)
         self.buf = b""
         self.next_id = 0
-        self.version = self.call("server.version", ["jevons-v1", "1.4"])
+        self.version = self.call("server.version", ["jevons-" + VERSION, "1.4"])
 
     def _send(self, calls):
         ids = []
@@ -553,6 +780,7 @@ def fetch_batch(client, first, count, prev_hash):
 def update(data, servers, budget_minutes):
     os.makedirs(data, exist_ok=True)
     ensure_data_readme(data)
+    snapshot = load_snapshot()
     s = load_series(data)
     st = load_state(data)
     tail = {}
@@ -566,13 +794,13 @@ def update(data, servers, budget_minutes):
     log("stored: %d blocks%s" % (len(s), ", to height %d" % stored_last if len(s) else ""))
 
     # where to resume: REFETCH_DEPTH blocks back, at a height whose hash is known
-    keep = START_HEIGHT - 1
+    keep = CHAIN_START - 1
     if len(s) > REFETCH_DEPTH:
         known = [h for h in tail if h <= s.last_height - REFETCH_DEPTH] or list(tail)
         if not known:
             raise DataError("state.json holds no hash to link the next block to")
         keep = max(known)
-    prev_hash = bytes.fromhex(tail[keep])[::-1] if keep >= START_HEIGHT else None
+    prev_hash = bytes.fromhex(tail[keep])[::-1] if keep >= CHAIN_START else None
     spare = s.rows_after(keep)       # put back if nothing at all can be fetched
     s.truncate_after(keep)
 
@@ -633,10 +861,32 @@ def update(data, servers, budget_minutes):
         return 1
     if status == "ok" and tip is not None and s.last_height < tip:
         status, note = "catching-up", "stored to height %d of %d" % (s.last_height, tip)
-    doc = build_json(s, status, note, tip, route.used or servers[0])
+
+    # this run's price readings, and the daily table
+    now = time.time()
+    reading = read_bchusd(now)
+    readings = record_reading(load_readings(data), snapshot[PRICE_SNAPSHOT_LAST], reading, now)
+    save_readings(data, readings)
+    if reading is None:      # neither source answered: the last known price stands, and the run is held
+        if readings:
+            price, source, read_utc = readings[max(readings)]
+            when = calendar.timegm(time.strptime(read_utc, "%Y-%m-%dT%H:%M:%SZ"))
+        else:
+            price, source = snapshot[PRICE_SNAPSHOT_LAST], "Kallisti's daily bchusd of " + PRICE_SNAPSHOT_LAST
+            when = calendar.timegm(time.strptime(PRICE_SNAPSHOT_LAST, "%Y-%m-%d")) + 86399
+        reading = {"price": price, "source": source + " (an earlier reading)", "time": when}
+        if status != "held":
+            status, note = "held", "BCH/USD could not be read at this run; the last known price stands"
+        log("!! HELD on the price: BCH/USD could not be read at this run")
+    gbpusd = read_gbpusd(now)
+
+    doc = build_json(s, DayPrices(snapshot, readings), status, note, tip, route.used or servers[0], reading, gbpusd, now)
+    if doc is None:
+        log("!! the stored blocks do not reach the first priced day yet: nothing to publish")
+        return 2 if status == "held" else 0
     write_json(data, doc)
-    log("v1 at height %d: EMA %.12g, raw %.12g BCH per XJU; status %s"
-        % (doc["height"], doc["ema_bch_per_xju"], doc["raw_bch_per_xju"], status))
+    log("XJU %s at height %d: %.6f USD, %.8f BCH (BCH/USD %.2f, %s); status %s"
+        % (VERSION, doc["height"], doc["xju_usd"], doc["xju_bch"], doc["bch_usd"], doc["bch_usd_source"], status))
     return 2 if status == "held" else 0
 
 
@@ -645,14 +895,27 @@ def show(data, height=None):
     if not len(s):
         log("!! no blocks stored under %s" % data)
         return 1
+    snapshot = load_snapshot()
+    readings = load_readings(data)
+    prices = DayPrices(snapshot, readings)
     note = "recomputed from the stored inputs"
     if height is not None:
-        if not START_HEIGHT <= height <= s.last_height:
-            log("!! height %d is outside the stored series, %d to %d" % (height, START_HEIGHT, s.last_height))
+        if not SERIES_START <= height <= s.last_height:
+            log("!! height %d is outside the stored series, %d to %d" % (height, SERIES_START, s.last_height))
             return 1
         s.truncate_after(height)
         note += ", as the series stood at height %d" % height
-    print(json.dumps(build_json(s, "ok", note, None, "none"), indent=2))
+    # the BCH figure uses the price of the last block's own day
+    t = None
+    for i in range(len(s)):
+        t = next_t(t, s.ts[i])
+    day = utc_day(t)
+    bchusd = {"price": prices.for_day(day), "source": "the daily price of %s" % day, "time": t}
+    doc = build_json(s, prices, "ok", note, None, "none", bchusd, None, time.time())
+    if doc is None:
+        log("!! the stored blocks do not reach the first priced day")
+        return 1
+    print(json.dumps(doc, indent=2))
     return 0
 
 
@@ -662,6 +925,7 @@ _HEADER_308672 = (
     "02000000ff0eadf6dbb54b5b8d5123ab8878ddc8946deede3714d83f0000000000000000"
     "eda3f3874f1f231ade0298afbacbcb0a92dbfb5659d31955ecfd76dd0b13267fabfcb153"
     "d15f4118952edca1")
+_HASH_308672 = "00000000000000003cd0095dd3f8ab06711a556d495ed170a69f07651c13bc9d"
 _COINBASE_308672 = (
     "01000000010000000000000000000000000000000000000000000000000000000000000000"
     "ffffffff5b03c0b504e4b883e5bda9e7a59ee4bb99e9b1bcfabe6d6d2eeadf67169943820610"
@@ -669,8 +933,8 @@ _COINBASE_308672 = (
     "4d696e6564206279206368616e67666569666569ffffffff014da37d96000000001976a914c8"
     "25a1ecf2a6830c4401620c3a16f1995057c2ab88ac00000000")
 _TXID_308672 = "ba90e55cc71c15492e50878f16ee846b4f8363f7303b9f953e40666852d49e47"
-_P_308672 = 0.005898322353181699      # BCH per kWh-equivalent, block 308672
-_P_977816 = 0.0005046029323555035     # BCH per kWh-equivalent, block 977816
+_P_977816 = 0.0005046029323555035 / 3.6e15    # block 977816's P, from the build of 2026-11-19
+_ORACLE_MESSAGE = "430b006b32851d0015851d00cd4e0000"   # read 2026-11-20: 201.73 USD at 1795164995
 
 
 def _close(a, b, rel=1e-12):
@@ -693,26 +957,29 @@ def selfcheck():
     check("eta 2026-11-18", _close(eta(1794960000), 93.22420167236999))
     check("eta 2026-11-19", _close(eta(1795046400), 93.2800709072487))
     check("eta 2017-08-02", _close(eta(1501632000), 10.142245500894695))
-    # the start block's header and coinbase, as the chain carries them
+    # a real header and coinbase (block 308672), as the chain carries them
     try:
-        ts, bits, hh = check_header(bytes.fromhex(_HEADER_308672), START_HEIGHT, None)
-        check("start header", (ts, bits) == (1404173483, 0x18415FD1)
-              and hh[::-1].hex() == CHECKPOINTS[START_HEIGHT])
+        ts, bits, hh = check_header(bytes.fromhex(_HEADER_308672), 308672, None)
+        check("a real header", (ts, bits) == (1404173483, 0x18415FD1) and hh[::-1].hex() == _HASH_308672)
     except ValueError:
-        check("start header", False)
+        check("a real header", False)
     try:
         bad = bytearray(bytes.fromhex(_HEADER_308672))
         bad[79] ^= 1
-        check_header(bytes(bad), START_HEIGHT + 1, None)
+        check_header(bytes(bad), 308672, None)
         check("a header without its proof of work is refused", False)
     except ValueError:
         check("a header without its proof of work is refused", True)
+    try:
+        check_header(bytes.fromhex(_HEADER_308672), CHAIN_START, None)
+        check("a block that is not the checkpoint is refused", False)
+    except ValueError:
+        check("a block that is not the checkpoint is refused", True)
     raw = bytes.fromhex(_COINBASE_308672)
-    check("start coinbase", parse_coinbase(raw) == (2524816205, START_HEIGHT)
+    check("a real coinbase", parse_coinbase(raw) == (2524816205, 308672)
           and dsha256(raw)[::-1].hex() == _TXID_308672)
-    # the formula on two real blocks (values from the build, 2026-11-19)
-    check("raw value, block 308672", _close(raw_value(0x18415FD1, 1404173483, 2524816205), _P_308672))
-    check("raw value, block 977816", _close(raw_value(0x1802459A, 1794960096, 312530492), _P_977816))
+    # the per-block value on a real block
+    check("block value, block 977816", _close(block_value(0x1802459A, 1794960096, 312530492), _P_977816))
     # t strictly increasing, and the moving average
     t, seen = None, []
     for stamp in (100, 90, 91, 200, 200):
@@ -722,14 +989,28 @@ def selfcheck():
     a = next_ema(None, 1.0)
     a = next_ema(a, 2.0)
     check("moving average", EMA_ALPHA == 2.0 / 201601 and _close(a, 1.0 + 2.0 / 201601))
-    s = Series()
-    s.append(1404173483, 0x18415FD1, 2524816205)
-    s.append(1404173532, 0x18415FD1, 2500000000)
-    r = compute(s)
-    p0 = raw_value(0x18415FD1, 1404173483, 2524816205)
-    p1 = raw_value(0x18415FD1, 1404173532, 2500000000)
-    check("series of two blocks", r["height"] == START_HEIGHT + 1 and r["raw"] == p1
-          and _close(r["ema"], p0 + EMA_ALPHA * (p1 - p0)))
+    # the price readings
+    check("oracle message", parse_oracle_message(_ORACLE_MESSAGE) == (1795164995, 201.73))
+    check("Kraken midpoint", _close(parse_kraken_mid(
+        {"error": [], "result": {"ZGBPZUSD": {"a": ["1.30973", "205", "205.000"], "b": ["1.30967", "346", "346.000"]}}}), 1.3097))
+    check("day of t", utc_day(1501632000) == "2017-08-02" and utc_day(1501631999) == "2017-08-01"
+          and _day_string(_day_number("2026-11-19")) == "2026-11-19"
+          and _day_number("2017-08-02") == 1501632000 // 86400)
+    # the daily table: today's row takes the reading, a closed day without one carries the day before's
+    r = record_reading({"2026-11-21": (210.0, "x", "t")}, 206.0,
+                       {"price": 199.5, "source": GP_NAME, "time": 1795400000}, 1795400000)   # 2026-11-23
+    check("daily table", r["2026-11-20"][0] == 206.0 and r["2026-11-21"][0] == 210.0
+          and r["2026-11-22"][0] == 210.0 and r["2026-11-23"][0] == 199.5 and sorted(r) ==
+          ["2026-11-20", "2026-11-21", "2026-11-22", "2026-11-23"])
+    p = DayPrices({"2026-11-18": 208.0, "2026-11-19": 206.0}, r)
+    check("price for a day", p.for_day("2026-11-19") == 206.0 and p.for_day("2026-11-22") == 210.0
+          and p.for_day("2026-11-24") == 199.5)
+    # the snapshot beside this file
+    try:
+        snap = load_snapshot()
+        check("price snapshot", snap[PRICE_FIRST_DAY] == 398.8438619311437 and snap[PRICE_SNAPSHOT_LAST] == 206.23700882182368)
+    except (OSError, DataError, KeyError):
+        check("price snapshot", False)
 
     failed = [name for name, ok in checks if not ok]
     for name, ok in checks:
@@ -739,11 +1020,11 @@ def selfcheck():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="The Jevons (XJU), version 1.")
+    ap = argparse.ArgumentParser(description="The Jevons (XJU), preview version " + VERSION + ".")
     sub = ap.add_subparsers(dest="command", required=True)
     sub.add_parser("selfcheck", help="run the fixed vectors")
-    up = sub.add_parser("update", help="fetch new blocks and write v1.json")
-    up.add_argument("--data", required=True, help="the directory holding blocks/, state.json and v1.json")
+    up = sub.add_parser("update", help="fetch new blocks and write xju.json")
+    up.add_argument("--data", required=True, help="the directory holding blocks/, state.json, bchusd_daily.csv and xju.json")
     up.add_argument("--server", action="append", help="host:port, repeatable; default: the two named in this file")
     up.add_argument("--budget-minutes", type=float, default=DEFAULT_BUDGET_MINUTES,
                     help="stop fetching after this long and write what there is")

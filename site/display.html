@@ -1,0 +1,299 @@
+<!-- site/display.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prices in Jevons (XJU) - shop display</title>
+<style>
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: #07090a; color: #f4f3ee; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; }
+.screen { display: flex; height: 100vh; width: 100vw; }
+.prices { flex: 0 0 64vw; padding: 4vh 2.5vw 3vh 3vw; display: flex; flex-direction: column; }
+.value { flex: 1 1 auto; padding: 4vh 2.5vw 3vh 2.5vw; background: #101614; border-left: 0.4vh solid #2fd3a3; display: flex; flex-direction: column; }
+h1 { font-size: 6vh; line-height: 1.1; margin: 0 0 0.6vh; font-weight: 800; }
+.strap { font-size: 2.5vh; color: #b9b8ae; margin: 0 0 2vh; }
+table { border-collapse: collapse; width: 100%; --s: 7vh; }
+th, td { text-align: right; padding: 0 0 0 2vw; vertical-align: baseline; white-space: nowrap; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; padding-left: 0; white-space: normal; }
+tr.callouts th { font-size: 2.1vh; font-weight: 500; color: #b9b8ae; line-height: 1.25; white-space: normal; vertical-align: bottom; padding-bottom: 0.3vh; }
+tr.callouts .arrow { display: block; font-size: 3.6vh; line-height: 1; color: #2fd3a3; }
+tr.heads th { font-size: 3vh; font-weight: 700; letter-spacing: 0.06em; padding-bottom: 1vh; border-bottom: 0.3vh solid #3a3f3b; }
+tr.heads th.xju { color: #2fd3a3; }
+tbody td { padding-top: 1.6vh; padding-bottom: 1.6vh; border-bottom: 0.15vh solid #262b28; }
+td.name { font-size: calc(var(--s) * 0.6); font-weight: 600; line-height: 1.15; }
+td.xju { font-size: var(--s); font-weight: 800; color: #2fd3a3; }
+td.bch { font-size: calc(var(--s) * 0.5); color: #e6e5df; }
+td.gbp { font-size: calc(var(--s) * 0.78); font-weight: 700; }
+.fill { flex: 1 1 auto; }
+.small { font-size: 1.9vh; color: #8f8e86; margin: 0.4vh 0 0; }
+.warn { font-size: 2.3vh; color: #ffd166; margin: 1vh 0 0; }
+.warn[hidden] { display: none; }
+.value h2 { font-size: 5.2vh; line-height: 1.1; margin: 0; font-weight: 800; }
+.value .ticker { font-size: 2.6vh; color: #2fd3a3; font-weight: 700; letter-spacing: 0.05em; margin: 0.6vh 0 0; }
+.value .what { font-size: 2.6vh; line-height: 1.35; color: #d5d4cc; margin: 2.4vh 0 0; }
+.value .eq { font-size: 3vh; color: #b9b8ae; margin: 4.5vh 0 0; }
+.value .bchfig { font-size: 7.6vh; font-weight: 800; line-height: 1.1; margin: 0.4vh 0 0; font-variant-numeric: tabular-nums; }
+.value .bchfig .u { font-size: 3.6vh; font-weight: 700; color: #b9b8ae; }
+.value .usd { font-size: 3vh; margin: 2.2vh 0 0; font-variant-numeric: tabular-nums; }
+.value .cal { font-size: 2.1vh; color: #b9b8ae; margin: 0.5vh 0 0; }
+.value .how { font-size: 2.2vh; line-height: 1.35; color: #b9b8ae; margin: 3vh 0 0; }
+.value .site { font-size: 5vh; font-weight: 800; color: #2fd3a3; margin: 0; }
+.value .seemore { font-size: 2.2vh; color: #b9b8ae; margin: 0 0 0.4vh; }
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <div class="prices">
+    <h1>Copy &amp; print prices</h1>
+    <p class="strap">Priced in Jevons. Pay in Bitcoin Cash or in pounds.</p>
+    <table id="table">
+      <thead>
+        <tr class="callouts">
+          <th></th>
+          <th>The price.<br>Set in Jevons: it stays put.<span class="arrow">&darr;</span></th>
+          <th>What that is in Bitcoin Cash right now.<span class="arrow">&darr;</span></th>
+          <th>And in pounds, at today's rate.<span class="arrow">&darr;</span></th>
+        </tr>
+        <tr class="heads">
+          <th>Service</th>
+          <th class="xju">XJU</th>
+          <th>BCH</th>
+          <th>GBP</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="warn" id="warn" hidden></p>
+    <div class="fill"></div>
+    <p class="small" id="rates">...</p>
+  </div>
+
+  <div class="value">
+    <h2>The Jevons</h2>
+    <p class="ticker">XJU &middot; preview <span id="version">0.2</span></p>
+    <p class="what">A unit of account for contracts. Its value is derived live from the Bitcoin Cash blockchain itself.</p>
+    <p class="eq">1 XJU =</p>
+    <p class="bchfig"><span id="xju-bch">...</span> <span class="u">BCH</span></p>
+    <p class="usd">= <span id="xju-usd">...</span> USD now</p>
+    <p class="cal">calibrated to 1.0000 USD on <span id="cal-day">2026-11-19</span>; floating since</p>
+    <p class="how">Recomputed every hour from each block's difficulty and coinbase, by a formula published in full.</p>
+    <div class="fill"></div>
+    <p class="seemore">The live value and the formula:</p>
+    <p class="site">xju.cash</p>
+    <p class="small" id="block">...</p>
+  </div>
+
+</div>
+<script>
+(function () {
+  "use strict";
+
+  var GP_URL = "https://oracles.generalprotocols.com/api/v1/oracleMessages" +
+    "?publicKey=02d09db08af1ff4e8453919cc866a4be427d7bfe18f2c05e5444c196fcf6fd2818&count=1";
+  var KRAKEN_BCHUSD = "https://api.kraken.com/0/public/Ticker?pair=BCHUSD";
+  var KRAKEN_GBPUSD = "https://api.kraken.com/0/public/Ticker?pair=GBPUSD";
+  var READING_MAX_AGE = 3600;         // seconds: an oracle message older than this is not a reading of now
+  var POUND = String.fromCharCode(163);
+
+  var state = {
+    json: null,      // xju.json, as last loaded
+    bchusd: null,    // { price, source, time } read by this page
+    gbpusd: null,    // { price, source, time } read by this page
+    prices: [],      // [{ name, text, xju }]
+    unread: 0        // lines of prices.txt that could not be read
+  };
+
+  function el(id) { return document.getElementById(id); }
+
+  function grouped(digits) {
+    var out = "";
+    for (var i = 0; i < digits.length; i++) {
+      if (i > 0 && (digits.length - i) % 3 === 0) { out += ","; }
+      out += digits.charAt(i);
+    }
+    return out;
+  }
+
+  function fixed(x, d) {
+    if (typeof x !== "number" || !isFinite(x)) { return "..."; }
+    var parts = x.toFixed(d).split(".");
+    return grouped(parts[0]) + (parts.length > 1 ? "." + parts[1] : "");
+  }
+
+  function sig(x, n) {
+    if (typeof x !== "number" || !isFinite(x) || x <= 0) { return "..."; }
+    var decimals = Math.min(20, Math.max(0, n - 1 - Math.floor(Math.log(x) / Math.LN10)));
+    return fixed(Number(x.toPrecision(n)), decimals);
+  }
+
+  function hhmm(seconds) {
+    var d = new Date(seconds * 1000);
+    var h = d.getUTCHours(), m = d.getUTCMinutes();
+    return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + " UTC";
+  }
+
+  function getJson(url) {
+    return fetch(url, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) { throw new Error("HTTP " + r.status); }
+      return r.json();
+    });
+  }
+
+  // a General Protocols price message: 16 bytes in hex; the time is bytes 0-3 and the
+  // price, in US cents per BCH, is bytes 12-15, both little-endian
+  function littleEndian(hex, firstByte) {
+    var v = 0;
+    for (var i = 3; i >= 0; i--) { v = v * 256 + parseInt(hex.substr(2 * (firstByte + i), 2), 16); }
+    return v;
+  }
+
+  function parseOracle(doc) {
+    var hex = doc.oracleMessages[0].message;
+    if (typeof hex !== "string" || hex.length !== 32) { throw new Error("oracle message not understood"); }
+    var time = littleEndian(hex, 0);
+    var price = littleEndian(hex, 12) / 100;
+    if (!(price > 1 && price < 1000000)) { throw new Error("oracle price not believable"); }
+    if (Math.abs(Date.now() / 1000 - time) > READING_MAX_AGE) { throw new Error("oracle message is old"); }
+    return { price: price, source: "General Protocols oracle", time: time };
+  }
+
+  // a Kraken ticker for one pair: the midpoint of best ask and best bid
+  function parseKraken(doc, source) {
+    if (doc.error && doc.error.length) { throw new Error("Kraken error"); }
+    var keys = Object.keys(doc.result);
+    var pair = doc.result[keys[0]];
+    var mid = (parseFloat(pair.a[0]) + parseFloat(pair.b[0])) / 2;
+    if (!(mid > 0)) { throw new Error("Kraken price not understood"); }
+    return { price: mid, source: source, time: Math.floor(Date.now() / 1000) };
+  }
+
+  // prices.txt: one service a line, "name | price in XJU"; lines opening with # are ignored
+  function parsePrices(text) {
+    var lines = text.split("\n");
+    var rows = [], unread = 0;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].replace(/\r$/, "").trim();
+      if (line === "" || line.charAt(0) === "#") { continue; }
+      var bar = line.lastIndexOf("|");
+      var name = bar < 0 ? "" : line.substring(0, bar).trim();
+      var priceText = bar < 0 ? "" : line.substring(bar + 1).trim();
+      var xju = /^[0-9]+(\.[0-9]+)?$/.test(priceText) ? parseFloat(priceText) : NaN;
+      if (name === "" || !(xju > 0)) { unread++; continue; }
+      rows.push({ name: name, text: priceText, xju: xju });
+    }
+    return { rows: rows, unread: unread };
+  }
+
+  function cell(tr, className, text) {
+    var td = document.createElement("td");
+    td.className = className;
+    td.textContent = text;
+    tr.appendChild(td);
+  }
+
+  function render() {
+    var j = state.json;
+    var bchusd = state.bchusd;
+    var gbpusd = state.gbpusd;
+    if (j) {
+      if (!bchusd && j.bch_usd) {
+        bchusd = { price: j.bch_usd, source: j.bch_usd_source + " (hourly)", time: Date.parse(j.bch_usd_time_utc) / 1000 };
+      }
+      if (!gbpusd && j.gbp_usd) {
+        gbpusd = { price: j.gbp_usd, source: j.gbp_usd_source + " (hourly)", time: Date.parse(j.gbp_usd_time_utc) / 1000 };
+      }
+    }
+    var xjuUsd = j ? j.xju_usd : NaN;
+    var xjuBch = bchusd ? xjuUsd / bchusd.price : NaN;
+    var xjuGbp = gbpusd ? xjuUsd / gbpusd.price : NaN;
+
+    // the prices
+    var body = el("rows");
+    while (body.firstChild) { body.removeChild(body.firstChild); }
+    for (var i = 0; i < state.prices.length; i++) {
+      var p = state.prices[i];
+      var tr = document.createElement("tr");
+      cell(tr, "name", p.name);
+      cell(tr, "xju", p.text);
+      cell(tr, "bch", isFinite(xjuBch) ? (p.xju * xjuBch).toFixed(8) : "...");
+      cell(tr, "gbp", isFinite(xjuGbp) ? POUND + fixed(p.xju * xjuGbp, 2) : "...");
+      body.appendChild(tr);
+    }
+    var n = Math.max(1, state.prices.length);
+    el("table").style.setProperty("--s", Math.min(7, 42 / n).toFixed(2) + "vh");
+
+    // the live value
+    if (j) {
+      el("version").textContent = j.version;
+      el("xju-bch").textContent = sig(xjuBch, 4);
+      el("xju-usd").textContent = fixed(xjuUsd, 4);
+      el("cal-day").textContent = j.calibration.utc_day;
+      el("block").textContent = "Block " + grouped(String(j.height)) + ". Value updated " +
+        hhmm(Date.parse(j.updated_utc) / 1000) + ".";
+    }
+    var parts = [];
+    if (bchusd) { parts.push("BCH/USD " + fixed(bchusd.price, 2) + ", " + bchusd.source + ", " + hhmm(bchusd.time)); }
+    if (gbpusd) { parts.push("GBP/USD " + fixed(gbpusd.price, 4) + ", " + gbpusd.source + ", " + hhmm(gbpusd.time)); }
+    el("rates").textContent = parts.length ? parts.join("  |  ") : "...";
+
+    // what is wrong, if anything
+    var warn = [];
+    if (!j) { warn.push("The Jevons' value could not be loaded yet."); }
+    else if (j.status === "catching-up") { warn.push("The chain's history is still being fetched: the value is not yet current."); }
+    else if ((Date.now() - Date.parse(j.updated_utc)) / 3600000 > 3) { warn.push("The Jevons' value was last updated over three hours ago."); }
+    if (j && !bchusd) { warn.push("No Bitcoin Cash price could be read."); }
+    if (j && !gbpusd) { warn.push("No pound exchange rate could be read."); }
+    if (state.unread) { warn.push(state.unread + (state.unread === 1 ? " line" : " lines") + " of the prices file could not be read."); }
+    el("warn").textContent = warn.join(" ");
+    el("warn").hidden = warn.length === 0;
+  }
+
+  function loadJson() {
+    getJson("xju.json?" + Date.now())
+      .then(function (d) { state.json = d; })
+      .catch(function () { /* the last loaded figures stand */ })
+      .then(render);
+  }
+
+  function loadPrices() {
+    fetch("prices.txt?" + Date.now(), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) { throw new Error("HTTP " + r.status); } return r.text(); })
+      .then(function (text) { var p = parsePrices(text); state.prices = p.rows; state.unread = p.unread; })
+      .catch(function () { /* the last loaded prices stand */ })
+      .then(render);
+  }
+
+  function loadBchUsd() {
+    getJson(GP_URL).then(parseOracle)
+      .catch(function () {
+        return getJson(KRAKEN_BCHUSD).then(function (d) { return parseKraken(d, "Kraken BCH/USD midpoint"); });
+      })
+      .then(function (reading) { state.bchusd = reading; })
+      .catch(function () { state.bchusd = null; /* render falls back to the hourly reading */ })
+      .then(render);
+  }
+
+  function loadGbpUsd() {
+    getJson(KRAKEN_GBPUSD).then(function (d) { return parseKraken(d, "Kraken GBP/USD midpoint"); })
+      .then(function (reading) { state.gbpusd = reading; })
+      .catch(function () { state.gbpusd = null; /* render falls back to the hourly reading */ })
+      .then(render);
+  }
+
+  render();
+  loadJson();
+  loadPrices();
+  loadBchUsd();
+  loadGbpUsd();
+  setInterval(loadJson, 5 * 60 * 1000);
+  setInterval(loadPrices, 5 * 60 * 1000);
+  setInterval(loadBchUsd, 2 * 60 * 1000);
+  setInterval(loadGbpUsd, 2 * 60 * 1000);
+  setTimeout(function () { location.reload(); }, 6 * 60 * 60 * 1000);
+}());
+</script>
+</body>
+</html>

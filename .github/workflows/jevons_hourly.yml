@@ -1,19 +1,26 @@
-# .github/workflows/jevons_v1_hourly.yml
+# .github/workflows/jevons_hourly.yml
 #
-# Every hour: fetch the new Bitcoin Cash blocks, recompute the Jevons' v1 value,
-# commit the per-block inputs to the v1-data branch and deploy the site
-# (site/ plus the fresh v1.json) to GitHub Pages.
+# Every hour, and whenever the site or the code changes on main: fetch the new
+# Bitcoin Cash blocks, read BCH/USD, recompute the Jevons' value, commit the
+# inputs to the chain-data branch and deploy the site (site/ plus the fresh
+# xju.json) to GitHub Pages.
 #
-# The first run fetches the whole history from 2014 and takes hours; a run cut
-# short by its time budget keeps what it fetched and the next run carries on.
+# The first run fetches the chain's history from its first block and takes hours;
+# a run cut short by its time budget keeps what it fetched and the next carries on.
 #
 # Set once on GitHub, by hand: Settings, Pages, Source = "GitHub Actions".
 
-name: Jevons v1 hourly
+name: Jevons hourly
 
 on:
   schedule:
     - cron: "17 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "service/**"
+      - ".github/workflows/jevons_hourly.yml"
   workflow_dispatch:
 
 permissions:
@@ -22,7 +29,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: jevons-v1
+  group: jevons
   cancel-in-progress: false
 
 jobs:
@@ -33,7 +40,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     env:
-      DATA_BRANCH: v1-data
+      DATA_BRANCH: chain-data
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -41,7 +48,7 @@ jobs:
           path: main
 
       - name: Self-check
-        run: python3 main/service/jevons_v1.py selfcheck
+        run: python3 main/service/jevons.py selfcheck
 
       - name: Get the data branch
         env:
@@ -61,11 +68,11 @@ jobs:
             exit 1
           fi
 
-      - name: Fetch new blocks and compute
+      - name: Fetch new blocks, read the price and compute
         id: update
         run: |
           rc=0
-          python3 main/service/jevons_v1.py update --data data --budget-minutes 300 || rc=$?
+          python3 main/service/jevons.py update --data data --budget-minutes 300 || rc=$?
           echo "rc=$rc" >> "$GITHUB_OUTPUT"
 
       - name: Commit the inputs
@@ -78,31 +85,42 @@ jobs:
           if git diff --cached --quiet; then
             echo "nothing new to commit"
           else
-            height=$(python3 -c 'import json; print(json.load(open("v1.json"))["height"])')
-            git commit --quiet -m "v1: height $height"
+            if [ -f xju.json ]; then
+              height=$(python3 -c 'import json; print(json.load(open("xju.json"))["height"])')
+            else
+              height="(no value yet)"
+            fi
+            git commit --quiet -m "XJU: height $height"
             git push --quiet origin "HEAD:$DATA_BRANCH"
           fi
 
       - name: Assemble the site
+        id: site
         if: steps.update.outputs.rc == '0' || steps.update.outputs.rc == '2'
         run: |
-          mkdir _site
-          cp -R main/site/. _site/
-          cp data/v1.json _site/v1.json
+          if [ -f data/xju.json ]; then
+            mkdir _site
+            cp -R main/site/. _site/
+            cp data/xju.json _site/xju.json
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "no xju.json yet: nothing to deploy this run"
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Upload the site
-        if: steps.update.outputs.rc == '0' || steps.update.outputs.rc == '2'
+        if: steps.site.outputs.ready == 'yes'
         uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
       - name: Deploy the site
-        if: steps.update.outputs.rc == '0' || steps.update.outputs.rc == '2'
+        if: steps.site.outputs.ready == 'yes'
         id: deploy
         uses: actions/deploy-pages@v5
 
       - name: Mark the run failed if the update was held or failed
         if: steps.update.outputs.rc != '0'
         run: |
-          echo "the update exited ${{ steps.update.outputs.rc }}: 2 = held at a gap (what there is was published), 1 = failed"
+          echo "the update exited ${{ steps.update.outputs.rc }}: 2 = held (what there is was published), 1 = failed"
           exit 1

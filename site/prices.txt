@@ -1,0 +1,13 @@
+# site/prices.txt
+# The shop's prices, set in Jevons (XJU). One service a line:
+#
+#     name of the service | price in XJU
+#
+# The bar divides the name from the price; the price is a plain number such as 0.15.
+# A line opening with # is ignored, and so is a blank line.
+# The display works out the BCH and GBP figures itself and reads this file again
+# every five minutes, once a change to it has been pushed.
+#
+# The two lines below are EXAMPLES ONLY: replace them with the shop's real prices.
+A4 copy, black and white | 0.15
+A4 colour print | 0.60
