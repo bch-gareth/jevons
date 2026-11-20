@@ -16,9 +16,14 @@ payloads and the standard prompts live - this file says what jevons has. If the
 two disagree, that is a BUG to flag.*
 
 *Revised by jevS010's lc, jev_lc_1_1_jevS010 (2026-11-15), in jevons' first
-documentation round: README.md now follows context.md, the private exception
-widens to priv_additional_files/, and the first round's folder exception is
-retired.*
+documentation round: README.md then to follow context.md (reversed at jevS030),
+the private exception widens to priv_additional_files/, and the first round's
+folder exception is retired.*
+
+*Amended at jevS030's fold by jev_fc_3_jevS030 (2026-11-20), from its lc's
+dossier: README.md is the saer's, edited in its build batches; .twndishinclude;
+what stands in for a component table and a proof inventory now code is built; the
+paths list.*
 
 *A PUBLIC FILE. jevons is a public repository, so this file is written for a
 human reader as well as for the parties (porth's poS201 brief, decision 6). In
@@ -50,8 +55,9 @@ this repo does not have, THIS FILE says what stands in for it.
   BESIDE THE COUNT: README.md (the public description, a party's file here - THE
   README, below), LICENSE, opener_files.txt, the git-ignored private supplement
   (THE PRIVATE SUPPLEMENT, below), and, in porth, the two saer payloads and the
-  standard prompts. jevons has no per-tool state files, no reference files and no
-  instruments yet: nothing is built.
+  standard prompts. jevons has no per-tool state files and no instruments; its code
+  since jevS030 - the compute, the site and the Action - and its one reference file,
+  bca's article, are listed in context.md's What lives where.
 - WHAT A SAER AND AN fc HOLD. A saer gets context.md and method.md WHOLE, and the
   brief; with no tool state files yet, a brief's STEP ZERO names by path whatever
   else its slice needs. An fc holds context.md whole as its fold target - Parked
@@ -68,7 +74,8 @@ this repo does not have, THIS FILE says what stands in for it.
   folds it; in a DOCUMENTATION ROUND the saer's build batch edits the files its
   brief names as subject directly, and the fc folds the account. This file is the
   fc's from the dossier in a dev round and the lc's in a documentation round,
-  delivered whole by dadbac tarball. README.md is edited the way context.md is.
+  delivered whole by dadbac tarball. README.md is the saer's in every round, edited
+  in its build batches (THE README, below).
 - THE SHARED FILES (coordinator.md, THE SHARED FILES). jevons is on porth's
   cywaithmds/operated_repos.txt since porth's poS201, so twndish with a role flag
   stages every file on porth's cywaithmds/shared_files.txt - method.md,
@@ -89,10 +96,14 @@ this repo does not have, THIS FILE says what stands in for it.
   shape) are porth's, on its shared list, and staged from its committed copy. A
   party requests one by its plain backticked path. Where they live and when each is
   read: the section at the end of this file.
-- NO LARDER, NOTHING BAKED OR MOUNTED; NO COMPONENT TABLE, NO MODULE BEHAVIOURS, NO
-  PROOF INVENTORY. Nothing is built yet, so none of these has an object here. Their
-  general form - read the live file, never prose about it - stands as always. The
-  first slice that builds code says here what stands in for each.
+- NO LARDER, NOTHING BAKED OR MOUNTED. The first code, jevS030's, stands in for the
+  rest so: for a COMPONENT TABLE and MODULE BEHAVIOURS, context.md's What lives where
+  and its Headline state (THE FORMULA, THE SERVICE, THE DISPLAY), with
+  service/jevons.py's docstring stating the formula in full; for a PROOF INVENTORY,
+  the script's own self-check (18 checks at jevS030), which the Action runs before
+  every computation - no test suite exists, jevS030's brief having fenced out tests
+  beyond what its parts needed. The general form - read the live file, never prose
+  about it - stands as always.
 - CACTC. Every conversation runs as a local Code-mode session on the operator's
   tablet, under the sandbox config porth tracks (porth's method.md section 1, which
   spells the name out). A brief, a dossier or an edit batch is a FILE, never content
@@ -119,12 +130,13 @@ this repo does not have, THIS FILE says what stands in for it.
   party, its content his alone. The consequences: sugno holds a root readme back
   from its list in any case and addheaders skips it ("skip readme", measured at
   porth's poS201), so README.md carries no path header and reaches a party only by
-  its own backticked path. README.md FOLLOWS context.md: what README.md says is
-  stated in context.md first and README.md is regenerated from it, never edited
-  apart, so the two cannot drift (the operator, jev_lc_1_1_jevS010's E1 c,
-  2026-11-14: "it's in context I should have changed it with readme following from
-  that"). README.md says it will be updated as each deliverable arrives; the slice
-  that lands one updates context.md, and README.md follows.
+  its own backticked path. README.md IS THE SAER'S, edited in its build batches in
+  every slice, and context.md catches up at the fold (the operator,
+  jev_lc_3_1_jevS030's B6 b, 2026-11-19: "It's live documentation that needs to
+  match what we're up to, not lag it. It's part of the saer's job."; standing for
+  every slice by its C2 a), replacing jevS010's rule that README.md followed
+  context.md (jev_lc_1_1_jevS010's E1 c). Where the operator edits README.md by hand,
+  as at jevS030, the next fold brings context.md level with it.
 - THE PRIVATE SUPPLEMENT AND priv_additional_files/, THE EXCEPTION (the operator's
   ruling at porth's poS201; widened at jevS010, jev_lc_1_1_jevS010's B5 and C11 a,
   2026-11-14). cywaithmds/priv_ctxt_sup.md holds the private half of jevons'
@@ -134,9 +146,13 @@ this repo does not have, THIS FILE says what stands in for it.
   display research files and the archive mining scripts. Both are git-ignored and
   never pushed. They are the
   EXCEPTION to coordinator.md's GIT-IGNORED MEANS LLM-IGNORED: twndish skips an
-  ignored path, naming it, so a party reads one only when the operator has staged it
-  by hand at twndish's prompt, and only then. No other ignored file is read. A rule
-  for public repos generally is proposed inbound to porth (jevS010).
+  ignored path, naming it, unless the root's .twndishinclude lists it - a tracked
+  file created at jevS030 on the operator's request, listing
+  cywaithmds/priv_ctxt_sup.md and priv_additional_files/ - so one reaches a party
+  only staged, by twndish through .twndishinclude on request or by the operator's
+  hand at twndish's prompt, and a party reads it only when its opener, its brief or
+  its own request names it. No other ignored file is read. A rule for public repos
+  generally is proposed inbound to porth (jevS010).
 - THE REPO'S IDENTITY (porth's poS201 brief, decision 2, and its lc, 2026-11-12).
   Commits are bch-gareth's, by the user name and email set in the repo's own
   config; the remote is https://bch-gareth@github.com/bch-gareth/jevons.git. The
@@ -156,12 +172,15 @@ this repo does not have, THIS FILE says what stands in for it.
   titled jev_sc_<n>_<fork>_<topic>, n the round's conversation number, as a saer's
   and an fc's names carry it (jev_lc_2_1_jevO020's fV1 a): the display research
   run before the founding is jev_sc_1_1_display, the XO study of 2026-11-18
-  jev_sc_2_1_xo (jev_lc_2_1_jevO020's dossier). coordinator.md's NAMING states no
-  form for one, so this is jevons' own; a generic form would travel inbound to
-  porth. A ROUND MAY BE RETAGGED FROM S TO O mid-conversation on the operator's
-  word, its lc renamed: jev_lc_2_1_jevS020 became jev_lc_2_1_jevO020, its number
-  kept, when the build moved to a fresh round, jevS030 (jev_lc_2_1_jevO020's
-  F7 a). There is no
+  jev_sc_2_1_xo (jev_lc_2_1_jevO020's dossier). Several in one round share its
+  number and differ by the topic word, as jevS030's jev_sc_3_1_utxoracle,
+  jev_sc_3_1_bchtemplate and jev_sc_3_1_bchchain (jev_lc_3_1_jevS030's dossier).
+  coordinator.md's NAMING states no form for one, so this is jevons' own; a generic
+  form would travel inbound to porth. A ROUND MAY BE RETAGGED between S and O on the
+  operator's word, its lc renamed and its number kept: jev_lc_2_1_jevS020 became
+  jev_lc_2_1_jevO020 when the build moved to a fresh round, jevS030
+  (jev_lc_2_1_jevO020's F7 a), and jev_lc_3_1_jevO030, opened with the wrong
+  letter, became jev_lc_3_1_jevS030 (its A1 a). There is no
   task queue yet: context.md's Parked carries the items for jevS010 onward, a DUE
   tag, (DUE: jevSnnn), marking one for a named slice; the parked sweep finds them.
 
@@ -190,12 +209,25 @@ context.md's What lives where section is the maintained authority):
 README.md                   the public description (a party's here; no path header)
 LICENSE                     the MIT licence (no path header)
 .gitignore, .porthignore    what git ignores; what sugno hides (this file)
+.twndishinclude             the ignored paths twndish may stage on request (the private
+                            supplement, priv_additional_files/)
 notes.md                    the operator's own notes (git-ignored, local only, never read)
 cash_unbound/booklet.md     the booklet "Cash Unbound", public: the operator's mdrender
                             export of its private master, overwritten at each render
                             (path header; its own terms, not MIT)
-priv_additional_files/      private material (git-ignored, never pushed; read only when
-                            the operator stages it by hand): the conversation archive
+blaze2026/buidl_description.md
+                            the DoraHacks submission's master, kept identical to the page
+references/                 bca's article, kept with his and the editor's agreement
+service/jevons.py           the compute, preview 0.2; its docstring states the formula
+service/bchusd_daily.csv    Kallisti's daily BCH/USD history, pinned
+site/index.html             the public page, https://xju.cash
+site/display.html           the shop-window display page
+site/prices.txt             the shop's prices, set in XJU (the operator's)
+.github/workflows/jevons_hourly.yml
+                            the hourly Action: self-check, update, deploy to Pages
+(branch chain-data)         the Action's stored inputs, on GitHub, never on main
+priv_additional_files/      private material (git-ignored, never pushed; read only once
+                            staged, by twndish or by hand): the conversation archive
                             and extracts, formula notes, the booklet's master and
                             its context file, the display research files, the
                             archive mining scripts
@@ -204,7 +236,7 @@ cywaithmds/coordlocal.md    THIS file, coordinator.md's per-repo part (the fc's 
                             dossier; the lc's in a documentation round)
 cywaithmds/opener_files.txt jevons' local opener files, per role: none yet
 cywaithmds/priv_ctxt_sup.md the private context supplement (git-ignored, never pushed;
-                            read only when the operator stages it by hand)
+                            read only once staged, by twndish or by hand)
 cywaithmds/slice.md         the brief, per slice (disposable, git-ignored; the lc
                             writes it on the tablet, where the saer reads it)
 cywaithmds/dossier.md       lc-to-fc handoff, per fold (disposable, git-ignored; the

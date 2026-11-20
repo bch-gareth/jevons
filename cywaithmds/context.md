@@ -7,7 +7,8 @@ account whose value is derived from data integral to the Bitcoin Cash (BCH)
 blockchain, and the operator's entry to the Blaze 2026 hackathon. README.md is its
 public description. This repository is PUBLIC: every tracked file, this one
 included, is written for a human reader as well as for the LLM conversations that
-work on it. Nothing is built yet (Headline state).
+work on it. Both Blaze 2026 deliverables are built and live as a preview, version
+0.2 (Headline state).
 
 This file is the repo's DURABLE STATE: what is true about jevons now, kept true and
 pruned at every fold, never a diary. A PRIVATE SUPPLEMENT exists beside it,
@@ -58,15 +59,16 @@ Parked holds decisions not yet taken, and reaches a saer through its brief; Hist
 is closed narrative, never a fact source.
 
 Founded 2026-11-11 by one empty commit; its founding files written at porth's
-poS201 and placed by the operator (History). Last fold: jevO020's, by
-jev_fc_2_jevO020 (2026-11-18).
+poS201 and placed by the operator (History). Last fold: jevS030's, by
+jev_fc_3_jevS030 (2026-11-20).
 
 ## What lives where
 
     README.md                  THE PUBLIC DESCRIPTION: what the Jevons
                                is and why, the reverse oracle, the
-                               Blaze 2026 deliverables and the state
-                               at the outset. A party's file here, not
+                               Blaze 2026 deliverables, the versions,
+                               the live value, the shop-window display
+                               and the state. A party's file here, not
                                the operator's (coordlocal.md, THE
                                README). No path header.
     LICENSE                    The MIT licence, "Copyright (c) 2026
@@ -86,6 +88,72 @@ jev_fc_2_jevO020 (2026-11-18).
                                jevs_1_1_jevS010's B2); under the
                                booklet's own terms, not the MIT
                                licence (jevs_1_1_jevS010's B7 b).
+    service/jevons.py          THE COMPUTE, preview version 0.2: one
+                               Python file, standard library only. It
+                               fetches headers and coinbases from a
+                               public Fulcrum server and checks them,
+                               reads BCH/USD, applies the formula and
+                               writes xju.json. Commands: selfcheck;
+                               update --data DIR; show --data DIR
+                               [--height H]. Exit 0 done, 2 held (what
+                               there is was written), 1 failed. Its
+                               docstring states the formula in full
+                               (jevS030).
+    service/bchusd_daily.csv   Kallisti's daily bchusd, 2017-08-02 to
+                               2026-11-19, 3,397 days, as fetched from
+                               cashnode.bch.ninja on 2026-11-20: the
+                               formula's BCH/USD history, pinned
+                               (jevs_3_1_jevS030's F1 a).
+    .github/workflows/jevons_hourly.yml
+                               THE ACTION: hourly at minute 17, on a
+                               push to main touching site/, service/
+                               or itself, and by hand. Runs the
+                               self-check, then update; commits the
+                               inputs to the chain-data branch; deploys
+                               site/ plus xju.json to GitHub Pages,
+                               whose source is set to GitHub Actions
+                               on GitHub, by hand.
+    site/index.html            THE PUBLIC PAGE, https://xju.cash: 1 XJU
+                               in BCH and in USD (drift from
+                               calibration), the formula in full, the
+                               reason for the dollar step, the
+                               credits. Reads xju.json; self-contained.
+    site/display.html          THE SHOP DISPLAY: two panes, the shop's
+                               prices in XJU, BCH and GBP with
+                               callouts, and the live value. Reads
+                               xju.json and prices.txt and, live,
+                               General Protocols' oracle and Kraken.
+    site/prices.txt            The shop's prices, set in XJU: one
+                               service a line, "name | price"; # lines
+                               ignored. The operator's: his own prices
+                               replaced jevS030's two example rows
+                               (relayed by jev_lc_3_1_jevS030,
+                               2026-11-20).
+    blaze2026/buidl_description.md
+                               THE MASTER of the DoraHacks submission
+                               text, kept identical to the page
+                               (Headline state, BLAZE 2026).
+    references/bitcoincashautist_article2026_WhiteBG.pdf
+                               bca's article from The Cash Column,
+                               tracked since jevO020's close, with
+                               bca's and the publication's editor's
+                               agreement (the operator, 2026-11-16).
+                               Its text layer is unusable - every
+                               glyph shifted by 29 - and the tablet's
+                               sandbox has no PDF tools; a corrected
+                               OCR text copy is private,
+                               priv_additional_files/
+                               bitcoincashautist_article2026_ocred.md,
+                               delivered by file card on 2026-11-20,
+                               its placement unconfirmed
+                               (jev_lc_3_1_jevS030).
+    (branch chain-data)        Written by the Action alone: blocks/
+                               (each Bitcoin Cash block's height,
+                               timestamp, nBits and coinbase total,
+                               from 478559, in files of 10,000
+                               heights), bchusd_daily.csv (the daily
+                               BCH/USD readings after 2026-11-19),
+                               state.json, xju.json and a README.md.
     notes.md                   The operator's own notes: git-ignored,
                                LOCAL ONLY, never staged and never read
                                by a party (po_lc_43_2's K3 a). Not
@@ -101,6 +169,11 @@ jev_fc_2_jevO020 (2026-11-18).
     .porthignore               Hides coordlocal.md from sugno, so a
                                whole-repo bundle never hands a saer a
                                coordinator file.
+    .twndishinclude            The ignored paths twndish may stage on
+                               request: cywaithmds/priv_ctxt_sup.md
+                               and priv_additional_files/. Created at
+                               jevS030 on the operator's request
+                               (coordlocal.md, THE PRIVATE SUPPLEMENT).
     cywaithmds/context.md      THIS FILE.
     cywaithmds/coordlocal.md   coordinator.md's PER-REPO part for
                                jevons: how porth's process maps onto
@@ -115,8 +188,9 @@ jev_fc_2_jevO020 (2026-11-18).
     cywaithmds/priv_ctxt_sup.md
                                THE PRIVATE CONTEXT SUPPLEMENT:
                                git-ignored, never pushed; read by a
-                               party only when the operator stages it
-                               by hand (po_lc_43_2's L3 a;
+                               party only once staged, by twndish
+                               through .twndishinclude or by the
+                               operator's hand (po_lc_43_2's L3 a;
                                coordlocal.md).
     slice*, dossier*, ad_saer*, take-home*, harvest_*, sort_*, survey_*
                                Disposables under cywaithmds/,
@@ -129,8 +203,9 @@ jev_fc_2_jevO020 (2026-11-18).
                                from porth's committed copy (porth's
                                method.md section 2).
     priv_additional_files/     PRIVATE: git-ignored, never pushed,
-                               read by a party only when the operator
-                               stages it by hand. Holds the
+                               read by a party only once staged, by
+                               twndish through .twndishinclude or by
+                               the operator's hand. Holds the
                                operator's earlier LLM conversations
                                (llm_jevons_archive/) and their
                                extracts, the formula notes, the
@@ -146,7 +221,7 @@ jev_fc_2_jevO020 (2026-11-18).
 
 ## Headline state
 
-*Present tense, pruned at every fold. The state at the outset: nothing is built.*
+*Present tense, pruned at every fold.*
 
 - THE UNIT. The Jevons, the same word in the singular and the plural (as siemens),
   honouring W. S. Jevons, who counted money's role as a standard of deferred
@@ -186,7 +261,10 @@ jev_fc_2_jevO020 (2026-11-18).
   contribution. The two are not in conflict: the difference is the use, not the
   thing (jev_lc_1_1_jevS010's K2 (i)). The research is largely by "bitcoin cash
   autist" (bca). Kallisti has already published a value live using a version of
-  bca's process; the operator's differs, because it serves a different purpose.
+  bca's process; the operator's differs, because it serves a different purpose. In
+  the 0.x preview a BCH/USD price from an outside oracle stands in for a chain-native
+  estimate, which v1 aims to remove (README.md, the operator's own sentence, added by
+  hand on 2026-11-20; jev_lc_3_1_jevS030's AK1).
 - BLAZE 2026, his hackathon entry, on DoraHacks, in the MEDIA track, not Mainnet
   (the operator, 2026-11-16: "I'm not actually building anything with CashScript or
   building an app *on top of* BCH; rather, something that utilises its POW and
@@ -198,59 +276,132 @@ jev_fc_2_jevO020 (2026-11-18).
   2026-11-16, not 2026-11-13 as first recorded, and the repo is linked to the entry;
   the roll call was missed, and the Details tab waives it and the Telegram check-in
   for known builders, as the organiser confirmed (jev_lc_2_1_jevO020's F1). The
-  submission, "Introducing Jevons", is MIRRORED: its master is to be
-  blaze2026/buidl_description.md, kept identical to the page ("any edits to be done
+  submission, "Introducing Jevons", is MIRRORED: its master is
+  blaze2026/buidl_description.md, placed at jevS030 and brought to version 0.2
+  there, kept identical to the page ("any edits to be done
   here or done there then immediately copied back", the operator, 2026-11-16;
   jev_lc_2_1_jevO020's H7 a). Its brief description, as of jev_lc_2_1_jevO020's
   N5 a (2026-11-18): "The Jevons (XJU): a unit of account for contracts, its value
   derived live from the Bitcoin Cash blockchain itself - priced for real in a shop
   window." Its CashTokens address, public, for EMBER2026 Community Choice votes
   (jev_lc_2_1_jevO020's F10):
-  bitcoincash:zzdf24xwz70xgsf3ldaftcny70pjzkcz65u093wnpu. Two deliverables: (i) a
-  web service, with a JSON file as its API, that fetches the chain data, applies v1
-  of the formula (below) and publishes the result live; (ii) a digital display
-  inside his shop window in Peel, Isle of Man, declaring his copy and print service
-  prices in Jevons - and a photograph or video of it in real use, taken from
-  outside the window. Both are due before the deadline. The BCH-notation XO
-  template once part of the entry is dropped (History).
+  bitcoincash:zzdf24xwz70xgsf3ldaftcny70pjzkcz65u093wnpu. Two deliverables, both built
+  at jevS030 and live as preview version 0.2 (below): (i) the live value, a page at
+  https://xju.cash with a JSON file, xju.json, as its API, recomputed hourly from the
+  chain data; (ii) the shop-window display, display.html on the same site, declaring
+  his copy and print service prices in Jevons and running full-screen on the
+  television in his shop window in Peel, Isle of Man - and a photograph or video of it
+  in real use, taken from outside the window, the operator's to take before the
+  deadline. The master carries the stand-in sentence too (THE REVERSE ORACLE, above),
+  and the operator pasted it to DoraHacks on 2026-11-20 (relayed by
+  jev_lc_3_1_jevS030). The BCH-notation XO template once part of the entry is dropped
+  (History).
 - THE DISPLAY, the operator's decision, reported by the side conversation
   jev_sc_1_1_display (2026-11-13) and standing from 2026-11-14
   (jev_lc_1_1_jevS010): for the hackathon street photo no window display is
-  ordered against the deadline; an ordinary large monitor stands on a table in the
-  shop window, facing the street, driven by the PC or a Raspberry Pi - bright
-  enough for the window, which faces north and gets no direct sun. The permanent
-  window display has no Blaze deadline, though its choice is wanted early (Parked,
-  THE DISPLAY). Each price shows in XJU, in BCH (standard notation) and in GBP, the
-  GBP figure from a public BCH/GBP price API (jev_lc_2_1_jevO020's N11 a). The side
-  conversation's findings are a private file (What lives where). The project is
+  ordered against the deadline; a 36-inch television on a floor stand faces the
+  street from the shop window (the operator, relayed by jev_lc_3_1_jevS030,
+  2026-11-20) - bright enough for the window, which faces north and gets no direct
+  sun. The permanent window display has no Blaze deadline, though its choice is
+  wanted early (Parked, THE DISPLAY). AS BUILT (jevS030): site/display.html, two
+  panes, landscape. One pane holds the shop's
+  prices, each SET IN XJU in site/prices.txt and shown also in BCH (plain decimal,
+  eight places) and in GBP, with a callout over each of the three columns; the other
+  the Jevons' live value. BCH = the XJU price x the unit's USD value / BCH/USD, the
+  browser reading General Protocols' oracle, then Kraken's BCH/USD midpoint, then the
+  hourly JSON's reading; GBP = the XJU price x the unit's USD value / Kraken's GBP/USD
+  midpoint, the hourly JSON's reading the fallback (site/display.html's script;
+  General Protocols publishes no BCH/GBP, measured 2026-11-20). It runs full-screen in
+  the television's own browser (the operator, relayed, 2026-11-20). His pricing ruling
+  of 2026-11-20 is not yet built (Parked, THE DISPLAY'S PRICING AND THE PUBLIC
+  WORDING). The side conversation's findings are a private file (What lives where).
+  The project is
   GEFN - good enough for now, a mode the operator chooses (porth's method.md
   section 4) - but a display he can repurpose is worth weighting.
-- THE v1 FORMULA, DECIDED AND NOT YET BUILT (jev_lc_2_1_jevO020, 2026-11-16 to 18,
-  its labels cited bare in this line). Per block, in height order, the block's raw
-  value is its coinbase - subsidy plus fees, the outputs summed (N7 a) - divided by
-  the energy-equivalent of its work, the work taken from the header's difficulty,
-  not from hashes (N6 a), and the energy from a logistic curve of mining efficiency
-  over time, ceiling 700 GH/J, steepness k = 8e-9 (L3 a), inflection 2034-04-20,
-  t0 = 2029104000 (L4 a): a value in BCH per kWh-equivalent. Published: the latest
-  block's raw value and its exponential moving average over 201,600 blocks, 200
-  weeks, smoothed from the per-block values rather than smoothing on smoothing
-  (L5 b, L6 a, N9 a). The constants are those of aggi's native price oracle view on
-  GitLab (views/materializers/native_price_oracle.yaml: 700, 0.000000008,
-  2029104000, the multiplier 4295032833e-18, data from 2014-07-01), read
-  byte-exact by the lc on 2026-11-16; Kallisti serves that view's output
-  (https://cashnode.bch.ninja/api/views/native_price_oracle; for 2026-11-18 bchmwh
-  1.9581, bchusd 208.24, mwhusd 106.35, read by the lc). THE UNIT, PROVISIONAL
-  (L7 a): 1 XJU = 1 kWh-equivalent, its falsifier the operator's later choice of
-  scale - "I have an instinct to have it a different order of magnitude (or half of
-  one) as an easy differentiation between the two." v1 is FROZEN, PUBLIC AND
-  VERSIONED, the operator's decision of 2026-08-07, superseding his July draft's
-  "fixed for all time" (stood by at L1): a later version never alters v1's series.
-  THE ROUTE, decided: chain data from a public Fulcrum/Electrum server (N8 a); a
-  static site on GitHub Pages, recomputed by an hourly GitHub Action, with a JSON
-  file as its API (N10 a). What stays open: Parked, THE v1 FORMULA.
-- BUILT SO FAR: nothing. The formula is decided (above) but not built; no service,
-  no display, no code; besides its founding files the repo holds the booklet's
-  public copy (What lives where).
+- THE FORMULA, PREVIEW VERSION 0.2, BUILT AND LIVE (jevS030; service/jevons.py's
+  docstring states it in full). VERSIONS (the operator, relayed by jev_lc_3_1_jevS030,
+  2026-11-20): Blaze publishes a PREVIEW series, 0.x, not frozen; v1 - FROZEN, PUBLIC
+  AND VERSIONED, the operator's decision of 2026-08-07, superseding his July draft's
+  "fixed for all time", so that a later version never alters v1's series - comes after
+  Blaze. 0.1, a 200-week EMA of a BCH-per-kWh-equivalent value, was built and applied
+  and never published. 0.2, per block from height 478568 - the first block whose t
+  falls on 2017-08-02 UTC, the first day of the price series - in height order: W =
+  2^256 / target, the target from the header's nBits, which is difficulty x 2^48 /
+  0xFFFF (work from difficulty, not hashes, jev_lc_2_1_jevO020's N6 a); t =
+  max(timestamp, previous t + 1), run from Bitcoin Cash's first block, 478559; eta(t)
+  = 700 / (1 + exp(-8e-9 x (t - 2029104000))), the mining-efficiency curve, its
+  constants those of aggi's native price oracle view on GitLab,
+  views/materializers/native_price_oracle.yaml, read byte-exact by jev_lc_2_1_jevO020
+  on 2026-11-16 (its L3 a and L4 a); the transcription reproduces Kallisti's served
+  curve to all 16 digits on three days (jevs_3_1_jevS030, 2026-11-19); its unit not
+  named; C = the coinbase's outputs summed, in BCH
+  (jev_lc_2_1_jevO020's N7 a); P = C x eta / W; U = BCH/USD for the UTC day t falls
+  on; A = the exponential moving average of P x U over 201,600 blocks, alpha =
+  2/201601, begun at the first block's own P x U; 1 XJU in USD = K x A, K = 2.528e16,
+  chosen once so that 1 XJU was 1 US dollar at block 978094, the last of 2026-11-19
+  UTC (jevs_3_1_jevS030's E3 a, E4 a, E5 a; 1.0000354633546267 USD there by the
+  shipped script's show --height 978094, 2026-11-20, and by the Action's own series on
+  GitHub, the operator's run of the same day); 1 XJU in BCH = K x A / the current
+  BCH/USD. The unit is not pegged to the dollar and has floated since. No energy unit
+  and no per-block XJU figure is published (the operator, 2026-11-20: "We *don't* ever
+  present or make it easy to think of the unit without the EMA."). BCH/USD IS A
+  STAND-IN for a chain-native estimate, which v1 is to replace it with: Kallisti's
+  daily bchusd to 2026-11-19 (service/bchusd_daily.csv), then General Protocols'
+  oracle read at each hourly run - a UTC day's price is its last reading, a closed day
+  is never revised, a day with no reading carries the day before's - with Kraken's
+  BCH/USD midpoint when the oracle cannot be read (jevs_3_1_jevS030's F1 a, F2 a, F3
+  a). WHY THE DOLLAR STEP, measured 2026-11-20 on Kallisti's daily series, 2020-11-15
+  to 2026-11-19: the work per BCH moved by about half of each BCH/USD move at every
+  span - regression slope 0.42 at 7 days, 0.49 at 30, 0.52 at 365 - so an average
+  taken in BCH carries BCH's own price swings. STEADINESS over the same era, standard
+  deviation of the log change in the unit's USD value: 0.06 per cent over 1 day, 1.78
+  over 30, 15.62 over 365, against BCH/USD's 4.83, 25.63 and 86.19 (the saer's scratch
+  script window_check3.py over the stored inputs, 2026-11-20); the unit's USD value
+  ran from 1.00 to 1.74 times its calibration value over the era and has fallen in
+  each year since 2022. What stays open: Parked, THE FORMULA.
+- THE SERVICE, BUILT AND LIVE (jevS030). Chain data comes from a public Fulcrum
+  server, bch.imaginary.cash:50002, bch.loping.net:50002 the fallback
+  (jev_lc_2_1_jevO020's N8 a; jevs_3_1_jevS030's A2 a). Every header must link to the
+  one before and meet its own proof-of-work target, three checkpoint hashes must match
+  (478559, 556767, 661648), and every coinbase must hash to its transaction id and
+  declare its block's height; the server's TLS certificate is not verified
+  (jevs_3_1_jevS030's A7 a). A block that cannot be fetched or does not check is never
+  skipped: the run holds at the block before it, writes what it has and exits 2
+  (jevs_3_1_jevS030's A5 a). Each run drops and fetches again the last 10 stored
+  blocks. A GitHub Action recomputes hourly and deploys a static site to GitHub Pages
+  with a JSON file, xju.json, as its API (jev_lc_2_1_jevO020's N10 a); the inputs are
+  kept on a branch of their own, chain-data (jevs_3_1_jevS030's A4 a, E6 a). LIVE at
+  https://xju.cash, the apex, www redirecting to it, HTTPS on, DNS at Fasthosts with
+  GitHub's account-level domain verification kept (jevs_3_1_jevS030's B1 a; the
+  operator, relayed by jev_lc_3_1_jevS030, 2026-11-20). The first run on GitHub
+  reached the chain's tip within about nine minutes of the push (the operator,
+  relayed, 2026-11-20).
+- THE SERVICE'S LIVE TRAPS (the saer's report, jevs_3_1_jevS030, 2026-11-20). The
+  published value shifts by parts in 100,000 within a UTC day, each hourly run
+  re-pricing the day's blocks at the latest reading until the day closes, by design;
+  so show --height reproduces an hour's published figure exactly only at a height
+  whose day had already closed, as the calibration block's had. SERIES_START =
+  478568 changes only with the price snapshot's first day - otherwise compute
+  refuses, a data error, exit 1 - and CHAIN_START and CHUNK fix the stored files'
+  layout, so changing either means re-cutting the stored inputs. A run short of the
+  tip publishes anyway, status "catching-up", with a notice on both pages. The
+  average's seed, one block's own value, still weighs 0.7 per cent at the
+  calibration block and pulls the figure down by about half a per cent, stated on no
+  public page; it fades. Kraken names a pair's result as it pleases (ZGBPZUSD for
+  GBPUSD), so the script and the display take the one key the answer holds; an
+  oracle message more than an hour old is refused and the fallback taken. The
+  display re-reads xju.json and prices.txt every five minutes and the two rates
+  every two, and reloads itself every six hours, so a deploy reaches the television
+  unattended. dadbac and addheaders read the workflow file's path header as
+  missing, though its line 1 carries it (carried to porth). Not verified: the
+  oracle's signatures; whether Kallisti's daily bchusd is a daily average or a
+  close; GitHub's disabling of a scheduled workflow after 60 days without
+  repository activity, a belief, and whether the Action's own commits to chain-data
+  count as activity; and chain-data's growth over time, each hour committing a
+  rewrite of the last blocks file, up to about 380 kB.
+- BUILT SO FAR: both Blaze 2026 deliverables, the live value and the shop-window
+  display, as preview version 0.2 (above). Besides them and its founding files the
+  repo holds the booklet's public copy and bca's article (What lives where).
 - THE REPO. ~/projects/jevons on the laptop, branch main, remote
   github.com/bch-gareth/jevons, PUBLIC; founded by one empty commit, 8c649d1
   "cychwyn", 2026-11-11, by bch-gareth. Identity, remote and credential helpers are
@@ -262,37 +413,79 @@ jev_fc_2_jevO020 (2026-11-18).
   lc opens by twndish jevons -l -o with the lc's name, on the laptop, and the
   shared files reach every bundle from porth's committed copy (coordlocal.md).
   Rounds so far: jevS010, the first lc's, a documentation round; jevO020, an
-  operations round folded dossier-only (History). The build is jevS030, its brief
-  drafted at jevO020 to cross that fold (Parked, THE SERVICE AND THE DISPLAY PAGE).
+  operations round folded dossier-only; jevS030, a dev round that built both Blaze
+  deliverables (History). Next: jevS040 (Parked, THE DISPLAY'S PRICING AND THE PUBLIC
+  WORDING).
 
 ## Parked
 
 *Decisions not yet taken. A DUE tag, (DUE: jevSnnn), marks an item for a named
 slice; the parked sweep finds it (coordlocal.md).*
 
-- THE v1 FORMULA, WHAT STAYS OPEN (the decided parts: Headline state, THE v1
-  FORMULA): the questions queued for bca on two constants, the steepness and the
-  date of the efficiency curve's inflection, against private material
-  (jev_lc_2_1_jevO020's L2; their detail private, priv_additional_files/); work
-  measured from hashes rather than difficulty, deferred to a later version, not
-  rejected (jev_lc_2_1_jevO020's N6 a, the operator: "The purist in me tends toward
-  using the hash; the paradigm being that the hash price is the price and the DAA is
-  the AMM. However, I can see the advantage of using the difficulty and the beauty of
-  versioning is that my decision now doesn't need to be final."); and the unit's
-  scale (jev_lc_2_1_jevO020's L7 a). A public description of the formula credits bca
-  by handle and cites only his published pieces, as README.md's references do
-  (jevs_1_1_jevS010, 2026-11-15).
-- THE SERVICE AND THE DISPLAY PAGE (DUE: jevS030): the live page with its JSON, and
-  the shop-window display page, on the decided route (Headline state); the brief,
-  drafted by jev_lc_2_1_jevO020 to cross this fold, is issued by jevS030's lc
-  against the folded file. jevS030 also creates blaze2026/buidl_description.md (the
-  submission's master, Headline state) and references/, placing bca's article from
-  The Cash Column - the BLISS 2026 conference publication,
-  http://bitcoincashpodcast.com/column2026.pdf - with bca's and the column editor's
-  agreement (the operator, 2026-11-16), the editor named by role, not by name, in
-  public files; and it regenerates README.md from this file: its NB paragraph on XO
-  and the notation gone, the CashTokens address, The Cash Column and the article's
-  repo links, and the live link once it exists.
+- THE FORMULA, WHAT STAYS OPEN (what is built: Headline state, THE FORMULA): v1
+  itself, frozen, after Blaze; the chain-native estimate that is to replace BCH/USD in
+  v1 (THE CHAIN-NATIVE BCH/USD ESTIMATE, below); the unit's fall in dollars since
+  2022, from 1.73 times its calibration value on 2022-01-01 to 1.00, measured and
+  published at jevS030 - a simple average over one halving epoch, 210,000 blocks, was
+  checked beside the 200-week EMA on 2026-11-20 and showed the same fall, and the
+  operator chose the EMA - its cause untested, the efficiency curve against real
+  hardware or miners' margins: recommended next, a curve audit, published hardware
+  efficiency against the curve with its pass rule fixed in advance, taken to bca with
+  the queued questions, and not a re-fitting of the curve to flatten the history,
+  which is the chart retro-fitting the operator guards against (jev_lc_3_1_jevS030's
+  dossier); the questions queued for bca
+  on two constants, the steepness and the date of the efficiency curve's inflection,
+  against private material (jev_lc_2_1_jevO020's L2; their detail private,
+  priv_additional_files/); work measured from hashes rather than difficulty, deferred
+  to a later version, not rejected (jev_lc_2_1_jevO020's N6 a, the operator: "The
+  purist in me tends toward using the hash; the paradigm being that the hash price is
+  the price and the DAA is the AMM. However, I can see the advantage of using the
+  difficulty and the beauty of versioning is that my decision now doesn't need to be
+  final."); and a merkle proof of each coinbase against its header, which would let
+  the fetched series be checked without trusting the server, deferred
+  (jevs_3_1_jevS030's A7 a). A public description of the formula credits bca by handle
+  and cites only his published pieces, as README.md's references do (jevs_1_1_jevS010,
+  2026-11-15).
+- THE CHAIN-NATIVE BCH/USD ESTIMATE, v1's candidate to replace BCH/USD, researched in
+  parallel and not against the Blaze deadline (the operator, 2026-11-20: "Now, this
+  might mean missing the deadline but the potential prize if this *could* be
+  introduced from Day 1 might be worth it."; jev_lc_3_1_jevS030's W2 a). Two side
+  conversations, each freezing its blind estimates by sha256 before the references
+  were opened: jev_sc_3_1_utxoracle found the round-dollar signal in transaction
+  outputs real - about 2 per cent scatter with the multiple known - but the multiple
+  wrong on 23 of 24 days; jev_sc_3_1_bchtemplate built a BCH estimator - blind test A
+  17 of 24 days with the prior, test B 27 of 60, the cause its own slip-recovery
+  rule, and 51 of 60 after the reveal with a three-day recovery. One outside price at
+  the start is acceptable for the Jevons (the first study's findings). A third,
+  jev_sc_3_1_bchchain, is briefed - the recovery rule, a decade check, a
+  two-reference pass rule, two fresh 60-day chains - and opening. Their briefs and
+  findings are on the tablet only, as cywaithmds/survey_utxoracle_brief.md,
+  survey_utxoracle_findings.md, survey_bchtemplate_brief.md,
+  survey_bchtemplate_findings.md and survey_bchchain_brief.md, and move to
+  priv_additional_files/ at the next dadbac, being private - they quote sealed
+  reference data and private test design. Their data, scripts, frozen files and
+  sealed references, about 3 GB, are in ~/zsa/jevons/_sc_utxoracle_data/ on the
+  tablet, beside a tablet copy of service/jevons_v1.py that the studies' scripts
+  import: twndishr jevons --fresh deletes every one of these, so they are set aside
+  before the next clearing (jev_lc_3_1_jevS030's dossier).
+- THE DISPLAY'S PRICING AND THE PUBLIC WORDING (DUE: jevS040): the operator's ruling
+  of 2026-11-20 (relayed by jev_lc_3_1_jevS030): the shop's prices are for payment in
+  BCH only, and a BCH payer pays the BCH for the XJU price or for the GBP price,
+  whichever is less. As built at jevS030 the display's GBP column is the XJU price
+  converted, so the ruling needs the operator's own GBP tariff as a column of its own
+  in site/prices.txt, and the display's line "Pay in Bitcoin Cash or in pounds." does
+  not match it. With it: the operator's wording revision of the public texts -
+  README.md, site/index.html and blaze2026/buidl_description.md - README.md's
+  reverse-oracle paragraph among them, which still says "relating to its hashes and
+  difficulty" - his take-home of 2026-11-20 carries his notes, and step zero reads
+  all three live, each edited by hand since jevS030's batch, as is site/prices.txt;
+  the operator's other candidates (jev_lc_3_1_jevS030's AL1 b): QR codes for the
+  booklet and the talk on the display pane, his idea, and the talk's video link (THE
+  TALK LINK, below); and two checks jevS030 left unreported: document.compatMode on
+  both live pages (porth's method.md section 6, addheaders' standing test), and an
+  hourly run green across a UTC midnight, with what chain-data's bchusd_daily.csv
+  then holds - and that the OCR text copy of bca's article reached
+  priv_additional_files/ (What lives where, references/).
 - THE DISPLAY: the permanent window display - no Blaze deadline, the hackathon's
   being decided (Headline state) - its choice and order, its programming and its
   place inside the north-facing window. Open from the side conversation's report
@@ -315,18 +508,19 @@ slice; the parked sweep finds it (coordlocal.md).*
   the placeholder used on DoraHacks, xju_logo_placeholder.svg, which is on the
   tablet only; and a write-up for GP of what the XO attempt taught, his and outside
   this repo.
-- THE PRIVATE SIDE OF jevO020, owed (jev_fc_2_jevO020, 2026-11-18): at the next
-  dadbac, priv_additional_files/ on the laptop gains what sits on the tablet - the
-  XO side conversation's brief, findings and test files (sc_xo_brief.md,
-  sc_xo_findings.md, sc_xo/), the two survey files of the formula's sources and
-  harvest, private material and the screenshots; and the private
-  supplement, not staged at this fold, gains a pointer to the XO findings, where
-  the notation's specification stays, and maps the two survey files as the
-  formula's harvest.
+- THE PRIVATE SIDE OF jevO020, owed (jev_fc_2_jevO020, 2026-11-18): the private
+  supplement gains a pointer to the XO findings, where the notation's specification
+  stays, and maps the two survey files as the formula's harvest; the files themselves
+  reached priv_additional_files/ at jevO020's close (jevO020's draft brief, as
+  jev_lc_3_1_jevS030's dossier records it).
 - THE TALK LINK: README.md names the talk "Cash Unbound" unlinked until Paytaca
   posts its separated recording, which the operator times to his Blaze delivery;
   the linked line waits, drafted, in the private supplement, THE BOOKLET, and is
   swapped in on his word (jevs_1_1_jevS010's A7 and B4 a).
+- A .com DOMAIN, for general contractual use, beside xju.cash, which serves the BCH
+  community for now (the operator, jevs_3_1_jevS030's A9: "The obvious .com / .org
+  .net ones are gone though it will need for general contractual use a .com one,
+  .cash will do us for the BCH community for the time being.").
 
 ## History
 
@@ -421,3 +615,60 @@ slice; the parked sweep finds it (coordlocal.md).*
   fV3 a): a side conversation numbered by its round's conversation number; material
   shared privately named in public files only as private material; the Headline
   formula line kept; the batch reissued mechanically by the lc.
+- 2026-11-18 to 2026-11-20, jevS030, a DEV ROUND with a mid-slice redirect (labels in
+  this entry are jev_lc_3_1_jevS030's unless named): briefed by jev_lc_3_1_jevS030 -
+  opened as jev_lc_3_1_jevO030 and retagged at its A1 a ("my bad with the 'O'") -
+  built by jevs_3_1_jevS030 and folded by jev_fc_3_jevS030. The brief, drafted at
+  jevO020, set v1 in BCH per kWh-equivalent with a 200-week EMA, in two parts; Part 1
+  was built so on 2026-11-19, applied and committed and never pushed, and is now
+  version 0.1. On 2026-11-20 the operator's rulings, relayed by message, changed the
+  formula, the unit, the versions and the gates, and the brief was not reissued: no
+  energy unit but a calibration to the dollar, firing jev_lc_2_1_jevO020's L7 a
+  falsifier ("What I'm aiming for (and I know this goes against what I may have
+  already decided) is to have XJU today be the same number as if I were pricing in
+  USD. That way it will be easy to see either drift or a sudden parting of ways if
+  USD/energy has a major separation"); a 0.x preview series, v1 frozen after Blaze
+  ("I think I'm abandoning the idea of having v1 for blaze. We should do 0.x versions
+  until then."); USD for K and the website, GBP on the shop side alone (sE1 b); shop
+  prices set in XJU for the Blaze demonstration, lifetime pricing waiting for v1 (K1
+  a, AA2 a). A one-week window, given a written pass rule before any back-test at the
+  operator's concern about chart retro-fitting, failed its check; he re-ruled to the
+  dollar-smoothed 200-week EMA (sE1 b) and chose it over a 210,000-block simple
+  average (AB1), and 0.2 went live at xju.cash, his new domain, the same day. Part
+  1's two old-named files were removed, and no v1-data branch exists (the operator's
+  git ls-files and git ls-remote, relayed by the lc, 2026-11-20). README.md became
+  the saer's, edited in its build batches, for every slice (B6 b, C2 a;
+  coordlocal.md, THE README); the operator added the stand-in sentence to README.md
+  and the submission master by hand, and accepted the saer's two unruled sentences
+  on the unit's steadiness and its fall since 2022 GEFN (AK1). The lc's claims
+  corrected by measurement: that difficulty follows BCH's price within days (it
+  follows about half, at every span from a day to a year); a window fixed from
+  ASERT's two-day half-life (ASERT makes difficulty follow hashrate, which follows
+  price far more slowly); that the fall since 2022 is the halving cycle (a one-epoch
+  average shows it too, 1.62 to 1.00); and that the github.io address stays the
+  working link until the domain has HTTPS (it redirects once the custom domain is
+  entered, GitHub's documentation). Not taken: the 210,000-block average, which jumps
+  as old blocks leave it (-27 per cent in 2025); a subsidy-adjusted prior, measured
+  unhelpful; a small-transaction pre-filter for the estimate studies, which cannot
+  save fetch time and would cut the cent-level signal (AL2 a); and a price index such
+  as CPI, an outside oracle heavier than BCH/USD. Parked items closed: THE SERVICE
+  AND THE DISPLAY PAGE, done, references/ created at jevO020's close; the unit's
+  scale, settled by the calibration. Measurements. The saer's: the script's
+  self-check 18 checks, 0 failed, on the laptop after the apply; an independent
+  recomputation agreeing with xju.json to 1.8 parts in 10^12; the full fetch through
+  the tablet sandbox's HTTP proxy, 2026-11-19, 669,347 blocks, none skipped, at 67 to
+  115 blocks a second. The lc's context at about 41 percent at AH1 (2026-11-20, the
+  operator's reading); a web-fetch agent failed on WebFetch's 10 MB PDF limit; a
+  general-purpose agent transcribed the report's sections for the close (71,867
+  subagent tokens, one tool use, 87 s). The pre-registered checks: the window's
+  failed on its fixed terms; sE1 b's design passed its own, a 30-day spread of 1.78
+  percent; the AA1 b check declined the simple average. THE SORT, counted from the
+  lc's responses held in context - approximate in its totals, exact in its labels:
+  about 60 items taken, 4 overruled - sA9 (GitHub's default address; xju.cash
+  instead), sC3 (Kraken; General Protocols instead), sC5 (one landscape page; two
+  panes, on new information) and AK1's route (the saer; the operator's own hand) -
+  and the operator departed from the lc's lean on 8 asked questions (B6, Y1, AA1,
+  AF1, AK1, AL1, AL3, AM3). livbot pinged the lc many times, uncounted, and the saer
+  five times. Parked and History at this fold's opening (awk over "## " sections,
+  context.md at sha256 ad22f3a8...): 156 of 423 lines, Parked 63, History 93, 36.9
+  percent.
