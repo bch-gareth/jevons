@@ -16,6 +16,8 @@ The Jevons' value is derived from data integral to the Bitcoin Cash blockchain -
 
 The research behind this approach is largely by bitcoin cash autist (bca). Kallisti already publishes a live value using a version of bca's process; the Jevons uses a different one, because it serves a different purpose.
 
+N. B. In the 0.x preview a BCH/USD price from an outside oracle stands in for a chain-native estimate, which v1 aims to remove.
+
 ## Blaze 2026
 
 The Jevons is the author's entry to the Blaze 2026 hackathon, in its Media track, for which submissions run from 13 November 2026, 13:00 UTC, to 22 November 2026, 14:00 UTC. It has two deliverables:

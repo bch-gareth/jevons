@@ -12,7 +12,7 @@ Money has been pulled into being four things at once - a medium of exchange, a u
 
 ### How it works
 
-- **A reverse oracle.** An oracle carries outside data onto a chain; a reverse oracle carries the chain's own data out. The Jevons' value is derived from data integral to the BCH blockchain - each block's difficulty and its coinbase - by a formula published in full, so anyone can check it.
+- **A reverse oracle.** An oracle carries outside data onto a chain; a reverse oracle carries the chain's own data out. The Jevons' value is derived from data integral to the BCH blockchain - each block's difficulty and its coinbase - by a formula published in full, so anyone can check it. Note that in the 0.x preview a BCH/USD price from an outside oracle stands in for a chain-native estimate, which v1 aims to remove.
 - **The formula, in brief.** Each block's coinbase is set against the work done to mine it, through a curve of mining efficiency over time. That figure is turned into US dollars, averaged over 200 weeks of blocks, and scaled by one constant, chosen once so that 1 XJU was 1 US dollar on 19 November 2026. The Jevons is not pegged to the dollar: it has floated since.
 - **Why the dollar step.** Measured over six years, mining difficulty followed only about half of each move in BCH's dollar price, so an average taken in BCH alone would carry BCH's own price swings into the unit. BCH/USD is a stand-in, which version 1 replaces with an estimate drawn from the chain itself.
 - **A preview.** What is live is version 0.2. Versions 0.x may change; version 1 - frozen, public and versioned - follows.

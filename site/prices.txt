@@ -9,5 +9,7 @@
 # every five minutes, once a change to it has been pushed.
 #
 # The two lines below are EXAMPLES ONLY: replace them with the shop's real prices.
-A4 copy, black and white | 0.15
-A4 colour print | 0.60
+A4 mono | 0.40
+A4 colour| 0.60
+A3 mono | 0.60
+A3 colour| 0.80
