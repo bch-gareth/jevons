@@ -25,6 +25,9 @@ dossier: README.md is the saer's, edited in its build batches; .twndishinclude;
 what stands in for a component table and a proof inventory now code is built; the
 paths list.*
 
+*Amended at jevS040's fold by jev_fc_4_jevS040 (2026-11-25), from its two branches'
+dossiers: files outside the repo, and paths (CACTC).*
+
 *A PUBLIC FILE. jevons is a public repository, so this file is written for a
 human reader as well as for the parties (porth's poS201 brief, decision 6). In
 plain words: the OPERATOR owns the repo and runs every command, commit and push;
@@ -120,7 +123,17 @@ this repo does not have, THIS FILE says what stands in for it.
   session, so which party reads what is conduct (coordinator.md, GIT-IGNORED MEANS
   LLM-IGNORED), and no session writes to its memory folder. THE FOLDER IS CLEARED AT
   A ROUND'S OPENING by `twndishr jevons --fresh` on the round's first tar, the
-  operator's y after its preview, dot-entries kept.
+  operator's y after its preview, dot-entries kept. FILES OUTSIDE THE REPO (the
+  operator, jev_lc_4_1_jevS040's C10, 2026-11-21, after a tablet-only logo file was
+  probably lost to a clearing): every file created, or imported from anywhere but
+  the repo, is questioned at once on whether it must outlive the round; if so it
+  goes into the repo, or, where there is a good case to keep it on the tablet - a
+  side conversation's working data - into a top-level folder whose name starts with
+  a dot, which --fresh keeps, as jevons' research data is kept in .xju_research/
+  (not in the repo; covered by no backup). And a path given with no qualifier is a
+  repo path, and a file with an identical repo path is never located on the tablet
+  (the operator, jev_lc_4_1_jevS040's A5, 2026-11-20). Both rulings were sent
+  inbound to porth at jevS040's close.
 - THE README, A DEVIATION, WITH ITS REASON (porth's poS201 brief, decision 8). In
   every other repo porth operates on, a root readme.md is the operator's own record,
   never read, staged or edited by a party. In jevons README.md is the PUBLIC
